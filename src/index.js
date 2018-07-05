@@ -1,7 +1,7 @@
 const init = () => 5
-
+const deepClone = array => JSON.parse(JSON.stringify(array))
 const gameUpdate = (state) => {
-  return state.slice()
+  return deepClone(state)
 }
 
 const getCell = (state, x, y) => {
@@ -16,17 +16,33 @@ const getAliveNeighbours = (state, x, y) => {
 }
 
 const createGrid = (x, y) => (new Array(y)).fill("").map(() => (new Array(x)).fill(0))
-const makeAlive = (grid, x, y) => {
-  const newGrid  = (grid.slice()).map(row => row.slice())
-  newGrid[y-1][x-1] = 1
+
+const changeCellState = (value, grid, x, y) => {
+  const newGrid  = deepClone(grid)
+  newGrid[y-1][x-1] = value
   return newGrid
 }
+const reviveCell = (grid, x, y) => changeCellState(1, grid, x, y)
+const killCell = (grid, x, y) => changeCellState(0, grid, x, y)
+const updateState = (grid) => {
 
+  const newGrid = grid
+  .map( (row, y) => 
+    row.map( (el, x) => {
+      const neigboursCount = getAliveNeighbours(grid, x+1, y+1)
+      if ( (neigboursCount > 3) || (neigboursCount < 2) ) return 0 
+      return 1
+    })
+  ) 
+  return newGrid
+} 
 export {
   init, 
   gameUpdate, 
   getCell, 
   getAliveNeighbours, 
   createGrid,
-  makeAlive
+  reviveCell,
+  killCell,
+  updateState
  }
