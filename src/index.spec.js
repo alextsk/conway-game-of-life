@@ -1,5 +1,5 @@
 import {init} from "./index.js"
-import {gameUpdate, getAliveNeighbours, getCell, createGrid, killCell, reviveCell, updateState} from "./index.js"
+import {gameUpdate, getAliveNeighbours, getCell, createGrid, killCell, reviveCell, updateState, generateField} from "./index.js"
 
 describe("test", () => {
   it("executes imported function", () => {
@@ -128,7 +128,7 @@ describe("updateState", () => {
     const newState = updateState(currentState)
     expect(getCell(newState, 2, 2)).toBe(0)                     
   })
-  
+
   it("should consider corner cells", () => {
     const currentState = [[0,0,0],
                           [1,1,1],
@@ -139,5 +139,48 @@ describe("updateState", () => {
     expect(getCell(newState, 3, 1)).toBe(1)                     
     expect(getCell(newState, 3, 3)).toBe(1)                     
   })
+})
+
+describe("generateField",() => {
+  it("should not mutate an existing grid", () => {
+    const currentState = [[0,0,0],
+                          [1,1,1],
+                          [0,0,0]]
+    const newState = generateField(currentState)
+    expect(currentState).toEqual([[0,0,0],
+                                  [1,1,1],
+                                  [0,0,0]])
+    expect(newState).not.toBe(currentState)
+  })
+
+  it("should create a grid of the same dimensions as given", () => {
+    const currentState = createGrid(9, 5)
+    const newState = generateField(currentState)
+    expect(newState.length).toBe(currentState.length)
+    expect(newState[0].length).toBe(currentState[0].length)
+  })
+  
+  describe("should randomly populate a grid with 0's and 1's", () => {
+    it("should not put anything but 1's or 0's ", () => {
+      const currentState = createGrid(9, 9)
+      const newState = generateField(currentState)
+      const noOtherValues = newState
+      .reduce((acc, row) => 
+        row.reduce( (acc, cell) =>  
+          acc && (cell === 1 || cell === 0), 
+          true), 
+        true )
+      expect(noOtherValues).toBe(true)
+     
+    })
+
+    it("it should put at least one '1' in a reasonably sized field",  () => {
+      const currentState = createGrid(9, 9)
+      const newState = generateField(currentState)
+      const anyOnes = newState.some(row => row.some(cell => cell === 1))
+      expect(anyOnes).toBe(true)
+    })
+  })
+  
 })
 

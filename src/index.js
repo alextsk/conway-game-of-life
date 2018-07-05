@@ -36,6 +36,8 @@ const updateState = (grid) => {
   ) 
   return newGrid
 } 
+
+const generateField = (grid) => grid.map(row => row.map(cell => Math.round(Math.random()) ))
 export {
   init, 
   gameUpdate, 
@@ -44,5 +46,6 @@ export {
   createGrid,
   reviveCell,
   killCell,
-  updateState
+  updateState,
+  generateField
  }
