@@ -1,9 +1,14 @@
-import {init} from "./index.js"
+import {init, partial} from "./index.js"
 import {gameUpdate, getAliveNeighbours, getCell, createGrid, killCell, reviveCell, updateState, generateField} from "./index.js"
 
 describe("test", () => {
   it("executes imported function", () => {
     expect(init()).toBe(5)
+  })
+  it("partially applies a function once", () => {
+    const add = (x, y) => x + y 
+    const add2 = partial(add, 2)
+    expect(add2(3)).toBe(5) 
   })
 })
 
@@ -159,7 +164,7 @@ describe("generateField",() => {
     expect(newState.length).toBe(currentState.length)
     expect(newState[0].length).toBe(currentState[0].length)
   })
-  
+
   describe("should randomly populate a grid with 0's and 1's", () => {
     it("should not put anything but 1's or 0's ", () => {
       const currentState = createGrid(9, 9)

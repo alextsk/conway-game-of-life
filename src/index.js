@@ -1,4 +1,6 @@
 const init = () => 5
+const partial = (fn, ...args) => (...rest) => fn(...args,...rest)
+
 const deepClone = array => JSON.parse(JSON.stringify(array))
 const gameUpdate = (state) => {
   return deepClone(state)
@@ -10,9 +12,10 @@ const getCell = (state, x, y) => {
 }
 
 const getAliveNeighbours = (state, x, y) => {
-  return getCell(state, x-1, y-1) + getCell(state, x, y-1) + getCell(state, x+1, y-1) +
-         getCell(state, x-1, y)  +                    getCell(state, x+1, y) + 
-         getCell(state, x-1, y+1) + getCell(state, x, y+1) + getCell(state, x+1, y+1) 
+  const cell = partial(getCell, state)
+  return cell(x-1, y-1) + cell(x, y-1) + cell(x+1, y-1) +
+         cell(x-1, y)  +                 cell(x+1, y) + 
+         cell(x-1, y+1) + cell(x, y+1) + cell(x+1, y+1) 
 }
 
 const createGrid = (x, y) => (new Array(y)).fill("").map(() => (new Array(x)).fill(0))
@@ -40,6 +43,7 @@ const updateState = (grid) => {
 const generateField = (grid) => grid.map(row => row.map(cell => Math.round(Math.random()) ))
 export {
   init, 
+  partial,
   gameUpdate, 
   getCell, 
   getAliveNeighbours, 
