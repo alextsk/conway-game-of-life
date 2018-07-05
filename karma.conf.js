@@ -6,6 +6,7 @@ module.exports = function(config) {
     basePath: '.',
 
     webpack: {
+      mode: "none",
       module: {
         rules: [
           {
@@ -26,14 +27,19 @@ module.exports = function(config) {
     preprocessors: {
       'src/**/*.spec.js': [ 'webpack' ]
     },
-    reporters: ['kjhtml'],
+    reporters: [
+      'progress', 
+     // 'kjhtml'
+    ],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: [
+      'FirefoxHeadless',
+      //'Chrome'
+      ],
     singleRun: false,
-
     // Concurrency level
     // how many browser should be started simultaneous
     concurrency: Infinity
