@@ -1,1 +1,0 @@
-<h2 align="center">Conway's game of life</h2>
