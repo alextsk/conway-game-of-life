@@ -22,6 +22,8 @@
     "webpack-serve": "^1.0.4"
   },
   "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-gh-pages": "^0.5.4",
     "karma-firefox-launcher": "^1.1.0"
   }
 }
