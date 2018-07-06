@@ -1,4 +1,4 @@
-
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   mode: "development",
@@ -17,5 +17,11 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      id:"game",
+      template: "src/index.html"
+    })
+  ]
 }
