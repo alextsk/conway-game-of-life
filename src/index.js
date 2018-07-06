@@ -1,55 +1,17 @@
-const init = () => 5
-const partial = (fn, ...args) => (...rest) => fn(...args,...rest)
+import {generateField} from "./logic.js"
+import {renderHtml} from "./html-renderer.js"
 
-const deepClone = array => JSON.parse(JSON.stringify(array))
-const gameUpdate = (state) => {
-  return deepClone(state)
+const draw = (container, render, grid) => {
+  container.innerHtml = render(grid)
 }
 
-const getCell = (state, x, y) => {
-  if (state[y-1] == undefined || state[y-1][x-1] == undefined) return 0
-  return +state[y-1][x-1]
+
+
+function main() {
+  const g = generateField(createGrid(5,5))
+  const gameContainer = document.querySelector("#game")
+  const drawApplied = partial(draw, gameContainer, renderHtml)
+  setTimeout( () => drawApplied(g), 1000)
+  
 }
 
-const getAliveNeighbours = (state, x, y) => {
-  const cell = partial(getCell, state)
-  return cell(x-1, y-1) + cell(x, y-1) + cell(x+1, y-1) +
-         cell(x-1, y)  +                 cell(x+1, y) + 
-         cell(x-1, y+1) + cell(x, y+1) + cell(x+1, y+1) 
-}
-
-const createGrid = (x, y) => (new Array(y)).fill("").map(() => (new Array(x)).fill(0))
-
-const changeCellState = (value, grid, x, y) => {
-  const newGrid  = deepClone(grid)
-  newGrid[y-1][x-1] = value
-  return newGrid
-}
-const reviveCell = (grid, x, y) => changeCellState(1, grid, x, y)
-const killCell = (grid, x, y) => changeCellState(0, grid, x, y)
-const updateState = (grid) => {
-
-  const newGrid = grid
-  .map( (row, y) => 
-    row.map( (el, x) => {
-      const neigboursCount = getAliveNeighbours(grid, x+1, y+1)
-      if ( (neigboursCount > 3) || (neigboursCount < 2) ) return 0 
-      return 1
-    })
-  ) 
-  return newGrid
-} 
-
-const generateField = (grid) => grid.map(row => row.map(cell => Math.round(Math.random()) ))
-export {
-  init, 
-  partial,
-  gameUpdate, 
-  getCell, 
-  getAliveNeighbours, 
-  createGrid,
-  reviveCell,
-  killCell,
-  updateState,
-  generateField
- }
