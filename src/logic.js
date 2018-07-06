@@ -30,8 +30,10 @@ const updateState = (grid) => {
   .map( (row, y) => 
     row.map( (el, x) => {
       const neigboursCount = getAliveNeighbours(grid, x+1, y+1)
-      if ( (neigboursCount > 3) || (neigboursCount < 2) ) return 0 
-      return 1
+      const isAlive = getCell(grid, x+1, y+1) === 1
+      return isAlive 
+          ? neigboursCount > 3 || neigboursCount < 2 ? 0 : 1
+          : (neigboursCount == 3) ? 1 : 0
     })
   )  
 } 

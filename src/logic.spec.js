@@ -77,7 +77,11 @@ describe("getAliveNeighbours", () => {
     const livingZero = [[0,0,0],
                         [0,1,0],
                         [0,0,0]] 
-    expect(getAliveNeighbours(livingZero, 2,2)).toBe(0)                                      
+    expect(getAliveNeighbours(livingZero, 2,2)).toBe(0) 
+    const cornerCase = [[0,0,1],
+                        [0,1,0],
+                        [0,0,0]] 
+    expect(getAliveNeighbours(cornerCase, 1,3)).toBe(1)                                       
   })
 
   it('covers the corner cells',() => {
@@ -99,12 +103,12 @@ describe("updateState", () => {
     expect(grid[0]).not.toBe(newGrid[0])
   })
 
-  it("should revive a cell with 2 neighbours", () => {
+  it("should pass a dead cell with 2 neighbours", () => {
     const currentState = [[1,1,0],
                           [0,0,0],
                           [0,0,0]]
     const newState = updateState(currentState)
-    expect(getCell(newState, 2, 2)).toBe(1)                     
+    expect(getCell(newState, 2, 2)).toBe(0)                     
   })
 
   it("should revive a cell with 3 neighbours", () => {
@@ -120,7 +124,32 @@ describe("updateState", () => {
                           [1,0,1],
                           [0,0,0]]
     const newState = updateState(currentState)
-    expect(getCell(newState, 2, 2)).toBe(0)                     
+    expect(getCell(newState, 2, 2)).toBe(0) 
+    const currentState2 = [[1,1,1],
+                           [1,1,1],
+                           [1,0,0]]
+    const newState2 = updateState(currentState2)
+    expect(getCell(newState2, 2, 1)).toBe(0)                     
+    expect(getCell(newState2, 2, 3)).toBe(0)                     
+  })
+  
+  it("should work with blinker", () => {
+    let blinker = 
+             [[0,0,0,0,0],
+              [0,0,1,0,0],
+              [0,0,1,0,0],
+              [0,0,1,0,0],
+              [0,0,0,0,0] 
+            ]
+    let blinkerSecond =  
+              [[0,0,0,0,0],
+               [0,0,0,0,0],
+               [0,1,1,1,0],
+               [0,0,0,0,0],
+               [0,0,0,0,0] 
+            ]
+    const newState = updateState(blinker)
+    expect(newState).toEqual(blinkerSecond)   
   })
 
   it("should kill a cell with less than 2 neighbours", () => {
@@ -128,13 +157,13 @@ describe("updateState", () => {
                           [0,0,0],
                           [0,0,0]]
     const newState = updateState(currentState)
-    expect(getCell(newState, 2, 2)).toBe(0)                     
+    expect(getCell(newState, 1, 1)).toBe(0)                     
   })
 
   it("should consider corner cells", () => {
-    const currentState = [[0,0,0],
+    const currentState = [[0,1,0],
                           [1,1,1],
-                          [0,0,0]]
+                          [0,1,0]]
     const newState = updateState(currentState)
     expect(getCell(newState, 1, 1)).toBe(1)                     
     expect(getCell(newState, 1, 3)).toBe(1)                     
@@ -173,7 +202,6 @@ describe("generateField",() => {
           true), 
         true )
       expect(noOtherValues).toBe(true)
-     
     })
 
     it("it should put at least one '1' in a reasonably sized field",  () => {
