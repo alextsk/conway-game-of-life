@@ -14,7 +14,7 @@ const draw = (container, render, model) => {
     if (delta - lastCall > 700) {
       lastCall = delta
       model.setGrid(updateState(model.getGrid()))
-      container.innerHTML = render(handlersFactory, model.getGrid())
+      container.innerHTML = render(classFactory, model.getGrid())
     }
     draw(container, render, model)
   })
