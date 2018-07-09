@@ -25,6 +25,7 @@ const changeCellState = (value, grid, x, y) => {
 
 const reviveCell = (grid, x, y) => changeCellState(1, grid, x, y)
 const killCell = (grid, x, y) => changeCellState(0, grid, x, y)
+const toggleCell = (grid, x, y) => getCell(grid,x,y) ? killCell(grid,x,y) : reviveCell(grid,x,y)
 const updateState = (grid) => {
   return grid
   .map( (row, y) => 
@@ -49,5 +50,6 @@ export {
   reviveCell,
   killCell,
   updateState,
-  generateField
+  generateField,
+  toggleCell
  }

@@ -1,31 +1,31 @@
 import {getCell} from "./logic.js"
 
-function makeTableCell (grid, x, y) {
-  return  `<td>${getCell(grid, x, y)}</td>`
+function makeTableCell (grid, x, y, hfac) {
+  return  `<td class="${hfac(x,y)} ${getCell(grid,x,y) ? 'alive' : 'dead'}" data-x=${x} data-y=${y}></td>`
 }
 
-function makeTableRow (grid, y) {
+function makeTableRow (grid, y, hfac) {
   return ( 
     `<tr>
-      ${ grid.map((cell, x) => makeTableCell(grid, x+1, y)).join("") }
+      ${ grid.map((cell, x) => makeTableCell(grid, x+1, y, hfac)).join("") }
     </tr>`
     )
 }
 
-function makeTable (grid) {
+function makeTable (grid, hfac) {
   return ` 
   <table>
     <tbody>
-      ${grid.map((row, y) => makeTableRow(grid, y+1)).join("")}
+      ${grid.map((row, y) => makeTableRow(grid, y+1, hfac)).join("")}
     </tbody>
   </table>
   `
 }
 
-function renderHtml(grid) {
+function renderHtml(hfac, grid) {
   return `
     <div>
-      ${makeTable(grid)}
+      ${makeTable(grid, hfac)}
     </div>
     `
 }
