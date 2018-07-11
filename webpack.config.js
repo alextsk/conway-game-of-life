@@ -20,7 +20,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      id:"game",
+      id:"game-field",
       template: "src/index.html"
     })
   ]

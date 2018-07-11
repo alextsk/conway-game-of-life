@@ -22,7 +22,7 @@ function makeTable (grid, hfac) {
   `
 }
 
-function renderHtml(hfac, grid) {
+function renderField(hfac, grid) {
   return `
     <div>
       ${makeTable(grid, hfac)}
@@ -30,4 +30,17 @@ function renderHtml(hfac, grid) {
     `
 }
 
-export {makeTableCell, makeTableRow, makeTable, renderHtml}
+function renderControls({minSpeed, maxSpeed}) {
+  return `
+    <button id="run">run</button>
+    <button id="reset">reset</button>
+    <label>speed: 
+    <input type="range" min="${minSpeed}" max="${maxSpeed}" id="speed"/>
+    <br />
+    <span id="speed-number"></span>
+    </label>
+
+  `
+}
+
+export {makeTableCell, makeTableRow, makeTable, renderField, renderControls}
