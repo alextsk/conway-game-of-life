@@ -22,6 +22,13 @@ function makeTable (grid, hfac) {
   `
 }
 
+function button(opts) {
+  const selectorType = opts.selector[0] == '.' ? "class" : "id"   
+  return `
+    <button ${selectorType}="${opts.selector.slice(1)}">${opts.title}</button>
+  `
+}
+
 function renderField(hfac, grid) {
   return `
     <div>
@@ -30,12 +37,12 @@ function renderField(hfac, grid) {
     `
 }
 
-function renderControls({minSpeed, maxSpeed}) {
+function renderControls({speed, play, reset}) {
   return `
-    <button id="run">run</button>
-    <button id="reset">reset</button>
+    ${button(play)}
+    ${button(reset)}
     <label>speed: 
-    <input type="range" min="${minSpeed}" max="${maxSpeed}" id="speed"/>
+    <input type="range" min="${speed.minSpeed}" max="${speed.maxSpeed}" id="${speed.selector.slice(1)}"/>
     <br />
     <span id="speed-number"></span>
     </label>
