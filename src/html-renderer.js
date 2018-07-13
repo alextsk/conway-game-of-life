@@ -28,8 +28,16 @@ function button(opts) {
     <button ${selectorType}="${opts.selector.slice(1)}">${opts.title}</button>
   `
 }
-
-function renderField(hfac, grid) {
+function selType (sel) {
+  switch (sel[0]) {
+    case '.':
+      return 'class'
+    case '#':
+      return 'id'
+  }
+   
+} 
+function renderField(grid, hfac) {
   return `
     <div>
       ${makeTable(grid, hfac)}
@@ -41,13 +49,20 @@ function renderControls({speed, play, reset}) {
   return `
     ${button(play)}
     ${button(reset)}
-    <label>speed: 
-    <input type="range" min="${speed.minSpeed}" max="${speed.maxSpeed}" id="${speed.selector.slice(1)}"/>
+    <label>${speed.title}: 
+    <input 
+      type="range" 
+      min="${speed.minSpeed}" 
+      max="${speed.maxSpeed}" 
+      ${selType(speed.selector)}="${speed.selector.slice(1)}"
+    />
     <br />
-    <span id="speed-number"></span>
+    <span ${selType(speed.auxSelector)}="${speed.auxSelector.slice(1)}"></span>
     </label>
 
   `
 }
+
+
 
 export {makeTableCell, makeTableRow, makeTable, renderField, renderControls}
