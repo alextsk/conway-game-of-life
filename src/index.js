@@ -1,17 +1,16 @@
 import {partial} from "./utils.js"
-import {generateField, createGrid} from "./logic.js"
 import {renderField, renderControls} from "./html-renderer.js"
-import {cellClickHandler, resetHandler, speedHandler, playHandler, initField, initControls} from "./events.js"
+import {cellClickHandler, resetHandler, widthHandler, heightHandler, speedHandler, playHandler, initField, initControls} from "./events.js"
 import {modelInit} from "./model.js"
 
 
 
 function main(fieldWidth, fieldHeight) {
-  const grid = generateField(createGrid(fieldWidth, fieldHeight))
-  const model = modelInit(grid, 700)
   const gameContainer = document.querySelector("#game-field")
+  const model = modelInit(30, 50, 700, gameContainer)
   const controlsContainer = document.querySelector("#game-controls")
   model.addObserver('redraw', (data) => {
+    
     gameContainer.innerHTML = renderField(model.getGrid(), () => "js-cell")
   })
   model.addObserver('controls', (components) => {
@@ -37,8 +36,24 @@ function main(fieldWidth, fieldHeight) {
           auxSelector: "#speed-number",
           title: "Speed",
           handler: speedHandler,
-          minSpeed: 100,
-          maxSpeed: 2000
+          minVal: 100,
+          maxVal: 2000
+        },
+        width: {
+          selector: "#width",
+          auxSelector: "#width-number",
+          title: "Width",
+          handler: widthHandler,
+          minVal: 10,
+          maxVal: 200
+        },
+        height: {
+          selector: "#height",
+          auxSelector: "#height-number",
+          title: "Height",
+          handler: heightHandler,
+          minVal: 10,
+          maxVal: 200
         }
       }
     }

@@ -30,14 +30,28 @@ function cellClickHandler(model) {
 
 function resetHandler(model) {
   return function (e) {
-    model.setGrid(generateField(createGrid(model.width, model.height)))
+    model.resetGrid()
   }
 }
 
 function speedHandler(model) {
   return function (e) {
     model.setSpeed(e.target.value)
-    model.broadcast("speed", e.target.value);
+    model.broadcast("Speed", e.target.value);
+  }
+}
+
+function widthHandler(model) {
+  return function (e) {
+    model.setWidth(e.target.value)
+    model.broadcast("Width", e.target.value);
+  }
+}
+
+function heightHandler(model) {
+  return function (e) {
+    model.setHeight(e.target.value)
+    model.broadcast("Height", e.target.value);
   }
 }
 
@@ -47,14 +61,20 @@ function playHandler(model) {
   }
 }
 
+function setSliderEvents(model, container, opts) {
+  const sel = container.querySelector(opts.selector)
+  const auxSel = container.querySelector(opts.auxSelector)
+  model.addObserver(opts.title, (value) => auxSel.innerHTML = value)
+  model.broadcast(opts.title, sel.value)
+  sel.addEventListener('change', opts.handler(model))
+}
+
 function initControls({model, container, components}) {
   model.broadcast("controls", components)
-
-  const speed = container.querySelector(components.speed.selector)
-  const speedNumber = container.querySelector(components.speed.auxSelector)
-  model.addObserver('speed', (value) => speedNumber.innerHTML = reportSpeed(value))
-  model.broadcast('speed', speed.value )
-  speed.addEventListener('change', components.speed.handler(model))
+  
+  setSliderEvents(model, container, components.speed)
+  setSliderEvents(model, container, components.width)
+  setSliderEvents(model, container, components.height)
 
   const playBtn = container.querySelector(components.play.selector)
   playBtn.addEventListener('click', components.play.handler(model))
@@ -74,4 +94,13 @@ function reportSpeed (value) {
   return (1000 / value).toFixed(2)  + "/sec"
 }
 
-export {cellClickHandler, resetHandler, speedHandler, playHandler, initField, initControls}
+export {
+  cellClickHandler, 
+  resetHandler, 
+  speedHandler, 
+  widthHandler,
+  heightHandler, 
+  playHandler, 
+  initField, 
+  initControls
+}

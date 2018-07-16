@@ -1,6 +1,7 @@
-function modelInit (grid, speed) {
+import {generateField, createGrid} from "./logic.js"
+
+function modelInit (width, height, speed, rootElement) {
   const observers = []
-  
   function broadcast(type, data) {
     observers.forEach(observer => observer.type == type && observer.handler(data))
   }
@@ -8,16 +9,38 @@ function modelInit (grid, speed) {
   function addObserver(type, handler) {
     observers.push({type, handler})
   }
-
+  const getGrid = () => grid
+  const setGrid = newGrid => grid = newGrid
+  const resetGrid = () => setGrid(generateField(createGrid(width, height)))
+  let grid = resetGrid()
   return {
-    getGrid: () => grid, 
-    setGrid: newGrid => grid = newGrid,
+    getGrid,
+    setGrid,
+    resetGrid,
     getSpeed: () => speed,
     setSpeed: newSpeed => speed = newSpeed,
-    addObserver: addObserver,
-    broadcast: broadcast,
-    width: grid.length,
-    height: grid[0].length,
+    getWidth: () => width,
+    setWidth: newWidth => {
+      width = +newWidth
+      let newrow = Array(+newWidth).fill(0) 
+      let newGrid  = getGrid().map(row => {
+        return newrow.map((el, i) => row[i] || el)
+      } )
+      setGrid(newGrid)
+    },
+     getHeight: () => height,
+     setHeight: newHeight => {
+      height = +newHeight
+      let newGrid = Array(+newHeight).fill('') 
+      let res =  newGrid.map((row, i) => {
+        return getGrid()[i] || Array(width).fill(0)
+      })
+      console.log('res', res)
+      setGrid(res)
+     },
+    addObserver,
+    broadcast,
+    rootElement,
     running: true,
   } 
 }
