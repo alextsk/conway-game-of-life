@@ -1,0 +1,50 @@
+table{
+      border-collapse: collapse;
+      background:  #003355;
+    }
+    td{
+      box-sizing: border-box;
+      text-align: center;
+      width:15px;
+      height: 15px;
+      border: 1px dotted rgba(0,0,0,.2);
+    }
+    .game-controls > *{
+      margin-bottom: 1rem;
+    }
+    label{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .subtitle {
+      font-style: italic;
+      font-size: 0.8rem;
+    }
+    #speed{
+      direction: rtl;
+    }
+    .alive{
+      background: #faa900;
+    }
+    button{
+      background: transparent;
+      border: 1px solid #003355;
+      padding:10px 0;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover{
+      background: #003355;
+      color: white;
+    }
+    .game {
+      display: grid;
+      grid-gap: 20px;
+      grid-template-columns: max-content minmax(500px, auto);
+      grid-auto-rows: auto;
+    }
+    .game-controls {
+      display: flex;
+      flex-direction: column;
+    }
