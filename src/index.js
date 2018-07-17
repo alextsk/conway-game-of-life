@@ -1,3 +1,4 @@
+import  "./styles.css"
 import {partial} from "./utils.js"
 import {renderField, renderControls} from "./html-renderer.js"
 import {cellClickHandler, resetHandler, widthHandler, heightHandler, speedHandler, playHandler, initField, initControls} from "./events.js"
@@ -29,31 +30,37 @@ function main(fieldWidth, fieldHeight) {
         play: {
           selector: "#run",
           handler: playHandler,
-          title: "Run"
+          title: "Pause"
         },
         speed: {
           selector: "#speed",
           auxSelector: "#speed-number",
           title: "Speed",
           handler: speedHandler,
+          reporter: val => (1000 / val).toFixed(2)  + " renders/sec",
           minVal: 100,
-          maxVal: 2000
+          maxVal: 2000,
+          initVal: model.getSpeed()
         },
         width: {
           selector: "#width",
           auxSelector: "#width-number",
           title: "Width",
           handler: widthHandler,
+          reporter: val => val + " cells", 
           minVal: 10,
-          maxVal: 200
+          maxVal: 200,
+          initVal: model.getWidth()
         },
         height: {
           selector: "#height",
           auxSelector: "#height-number",
           title: "Height",
           handler: heightHandler,
+          reporter: val => val + " cells",
           minVal: 10,
-          maxVal: 200
+          maxVal: 200,
+          initVal: model.getHeight()
         }
       }
     }

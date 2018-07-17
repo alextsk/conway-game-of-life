@@ -47,6 +47,7 @@ function renderField(grid, hfac) {
 }
 function slider(opts) {
   return `
+  <div>
     <label>${opts.title}: 
       <input 
         type="range" 
@@ -54,9 +55,11 @@ function slider(opts) {
         max="${opts.maxVal}" 
         ${selType(opts.selector)}="${opts.selector.slice(1)}"
       />
-      <br />
-      <span ${selType(opts.auxSelector)}="${opts.auxSelector.slice(1)}"></span>
-    </label>`
+    </label>  
+    <div class="subtitle" ${selType(opts.auxSelector)}="${opts.auxSelector.slice(1)}"></div>
+  </div>
+    
+    `
 }
 function renderControls({speed, play, reset, width, height}) {
   return `
@@ -70,4 +73,4 @@ function renderControls({speed, play, reset, width, height}) {
 
 
 
-export {makeTableCell, makeTableRow, makeTable, renderField, renderControls}
+export {renderField, renderControls}

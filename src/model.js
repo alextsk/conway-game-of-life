@@ -1,6 +1,6 @@
 import {generateField, createGrid} from "./logic.js"
 
-function modelInit (width, height, speed, rootElement) {
+function modelInit (width, height, speed) {
   const observers = []
   function broadcast(type, data) {
     observers.forEach(observer => observer.type == type && observer.handler(data))
@@ -40,7 +40,6 @@ function modelInit (width, height, speed, rootElement) {
      },
     addObserver,
     broadcast,
-    rootElement,
     running: true,
   } 
 }

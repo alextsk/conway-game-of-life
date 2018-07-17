@@ -1,4 +1,3 @@
-import {partial} from "./utils.js"
 import {toggleCell, updateState} from "./logic.js"
 
 
@@ -58,13 +57,15 @@ function heightHandler(model) {
 function playHandler(model) {
   return function (e) {
     model.running = !model.running
+    e.target.innerHTML = model.running ? "Pause" : "Run"
   }
 }
 
 function setSliderEvents(model, container, opts) {
   const sel = container.querySelector(opts.selector)
+  sel.value = opts.initVal
   const auxSel = container.querySelector(opts.auxSelector)
-  model.addObserver(opts.title, (value) => auxSel.innerHTML = value)
+  model.addObserver(opts.title, (value) => auxSel.innerHTML = opts.reporter(value))
   model.broadcast(opts.title, sel.value)
   sel.addEventListener('change', opts.handler(model))
 }
@@ -88,10 +89,6 @@ function initField({model, container, handler}) {
     model.broadcast("redraw") 
     document.addEventListener("click", handler(model))
     draw(model)
-}
-
-function reportSpeed (value) {
-  return (1000 / value).toFixed(2)  + "/sec"
 }
 
 export {
