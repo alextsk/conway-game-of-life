@@ -4,19 +4,20 @@ function makeTableCell (grid, x, y, hfac) {
   return  `<td class="${hfac(x,y)} ${getCell(grid,x,y) ? 'alive' : 'dead'}" data-x=${x} data-y=${y}></td>`
 }
 
-function makeTableRow (grid, y, row, hfac) {
+function makeTableRow (grid, y,  hfac) {
+  console.log(grid, y, grid[y])
   return ( 
     `<tr>
-      ${ row.map((cell, x) => makeTableCell(grid, x+1, y, hfac)).join("") }
+      ${ grid[y].map((cell, x) => makeTableCell(grid, x+1, y+1, hfac)).join("") }
     </tr>`
     )
 }
 
-function makeTable (grid, hfac) {
+function makeTable (grid, hfac = () => "") {
   return ` 
   <table>
     <tbody>
-      ${grid.map((row, y) => makeTableRow(grid, y+1, row, hfac)).join("")}
+      ${grid.map((row, y) => makeTableRow(grid, y, hfac)).join("")}
     </tbody>
   </table>
   `
@@ -46,9 +47,11 @@ function renderField(grid, hfac) {
     `
 }
 function slider(opts) {
+  let selTypeAux = selType(opts.auxSelector)
+  let selAux = opts.auxSelector.slice(1)
   return `
   <div>
-    <label>${opts.title}: 
+    <label>${opts.title || "unknown"}: 
       <input 
         type="range" 
         min="${opts.minVal}" 
@@ -56,9 +59,8 @@ function slider(opts) {
         ${selType(opts.selector)}="${opts.selector.slice(1)}"
       />
     </label>  
-    <div class="subtitle" ${selType(opts.auxSelector)}="${opts.auxSelector.slice(1)}"></div>
+    <div class="subtitle ${selTypeAux == 'class' ? selAux : ''}" ${selType(opts.auxSelector)}="${selAux}"></div>
   </div>
-    
     `
 }
 function renderControls({speed, play, reset, width, height}) {
@@ -71,6 +73,4 @@ function renderControls({speed, play, reset, width, height}) {
   `
 }
 
-
-
-export {renderField, renderControls}
+export {renderField, renderControls, makeTableCell, makeTableRow, makeTable, button, slider}
