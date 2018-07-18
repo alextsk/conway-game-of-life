@@ -11,6 +11,7 @@ function modelInit (width, height, speed) {
   }
   const getGrid = () => grid
   const setGrid = newGrid => grid = newGrid
+  
   const resetGrid = () => setGrid(generateField(createGrid(width, height)))
   let grid = resetGrid()
   return {

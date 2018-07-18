@@ -15,8 +15,6 @@ const getAliveNeighbours = (state, x, y) => {
          cell(x-1, y+1) + cell(x, y+1) + cell(x+1, y+1) 
 }
 
-const createGrid = (x, y) => (new Array(y)).fill("").map(() => (new Array(x)).fill(0))
-
 const changeCellState = (value, grid, x, y) => {
   const newGrid  = deepClone(grid)
   newGrid[y-1][x-1] = value
@@ -24,8 +22,11 @@ const changeCellState = (value, grid, x, y) => {
 }
 
 const reviveCell = (grid, x, y) => changeCellState(1, grid, x, y)
+
 const killCell = (grid, x, y) => changeCellState(0, grid, x, y)
+
 const toggleCell = (grid, x, y) => getCell(grid,x,y) ? killCell(grid,x,y) : reviveCell(grid,x,y)
+
 const updateState = (grid) => {
   return grid
   .map( (row, y) => 
@@ -38,6 +39,8 @@ const updateState = (grid) => {
     })
   )  
 } 
+
+const createGrid = (x, y) => (new Array(y)).fill("").map(() => (new Array(x)).fill(0))
 
 const generateField = (grid) => grid.map(row => row.map(cell => Math.round(Math.random()) ))
 

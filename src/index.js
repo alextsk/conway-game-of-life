@@ -10,8 +10,7 @@ function main(fieldWidth, fieldHeight) {
   const gameContainer = document.querySelector("#game-field")
   const model = modelInit(30, 50, 700, gameContainer)
   const controlsContainer = document.querySelector("#game-controls")
-  model.addObserver('redraw', (data) => {
-    
+  model.addObserver('redraw', (data) => { 
     gameContainer.innerHTML = renderField(model.getGrid(), () => "js-cell")
   })
   model.addObserver('controls', (components) => {
