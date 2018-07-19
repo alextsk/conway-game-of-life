@@ -1,18 +1,23 @@
 import {toggleCell, updateState} from "./logic.js"
 
-
-let lastCall = 0;
-const draw = (model) => {
-  requestAnimationFrame( (delta) => {
-    if (delta - lastCall > model.getSpeed()) {
-      lastCall = delta
-      if (model.running) {
-        model.setGrid(updateState(model.getGrid()))
-        model.broadcast("redraw")
+function animate(fn, delay, ...args) {
+  let lastCall = 0
+  return (function animatep(fn, delay, ...args) {
+    requestAnimationFrame( (delta) => {
+      if (delta - lastCall > delay()){
+        lastCall = delta
+        fn(...args)
       }
-    }
-    draw(model)
-  })
+      animatep(fn, delay, ...args)
+    })
+  })(fn, delay, ...args)
+}
+
+function draw(model) {
+  if (model.running) {
+    model.setGrid(updateState(model.getGrid()))
+    model.broadcast("redraw")
+  }
 }
 
 function cellClickHandler(model) {
@@ -36,21 +41,23 @@ function resetHandler(model) {
 function speedHandler(model) {
   return function (e) {
     model.setSpeed(e.target.value)
-    model.broadcast("Speed", e.target.value);
+    model.broadcast("Speed", e.target.value)
   }
 }
 
 function widthHandler(model) {
   return function (e) {
     model.setWidth(e.target.value)
-    model.broadcast("Width", e.target.value);
+    model.broadcast("Width", e.target.value)
+    model.broadcast("redraw")
   }
 }
 
 function heightHandler(model) {
   return function (e) {
     model.setHeight(e.target.value)
-    model.broadcast("Height", e.target.value);
+    model.broadcast("Height", e.target.value)
+    model.broadcast("redraw")
   }
 }
 
@@ -88,7 +95,7 @@ function initControls({model, container, components}) {
 function initField({model, container, handler}) {
     model.broadcast("redraw") 
     document.addEventListener("click", handler(model))
-    draw(model)
+    animate(draw, model.getSpeed, model)
 }
 
 export {
