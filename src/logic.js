@@ -40,19 +40,14 @@ const updateState = (grid) => {
   )  
 } 
 
-const createGrid = (x, y) => (new Array(y)).fill("").map(() => (new Array(x)).fill(0))
-
-const generateField = (grid) => grid.map(row => row.map(cell => Math.round(Math.random()) ))
 
 export {
   partial,
   gameUpdate, 
   getCell, 
   getAliveNeighbours, 
-  createGrid,
   reviveCell,
   killCell,
   updateState,
-  generateField,
   toggleCell
  }

@@ -1,5 +1,6 @@
 node_modules/
 _reports/
+coverage/
 dist/
 .publish
 yarn-error.log

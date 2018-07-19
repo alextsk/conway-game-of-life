@@ -5,7 +5,6 @@ function makeTableCell (grid, x, y, hfac) {
 }
 
 function makeTableRow (grid, y,  hfac) {
-  console.log(grid, y, grid[y])
   return ( 
     `<tr>
       ${ grid[y].map((cell, x) => makeTableCell(grid, x+1, y+1, hfac)).join("") }
