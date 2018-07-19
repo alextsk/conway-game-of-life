@@ -1,4 +1,3 @@
-import {toggleCell, updateState} from "./logic.js"
 
 function animate(fn, delay, ...args) {
   let lastCall = 0
@@ -15,7 +14,7 @@ function animate(fn, delay, ...args) {
 
 function draw(model) {
   if (model.running) {
-    model.setGrid(updateState(model.getGrid()))
+    model.broadcast("update")
     model.broadcast("redraw")
   }
 }
@@ -24,7 +23,8 @@ function cellClickHandler(model) {
   return function(e) {
     if (e.target.classList.contains('js-cell')) {
       const data = e.target.dataset
-      model.setGrid(toggleCell(model.getGrid(), data.x, data.y))
+      model.broadcast("toggle", data)
+      
       requestAnimationFrame(() => {
         model.broadcast("redraw")
       })

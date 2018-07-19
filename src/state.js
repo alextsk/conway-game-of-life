@@ -1,3 +1,4 @@
+export {updateState, toggleCell} from "./logic.js"
 
 const createGrid = (x, y) => (new Array(y)).fill("").map(() => (new Array(x)).fill(0))
 

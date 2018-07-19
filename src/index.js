@@ -2,7 +2,7 @@ import  "./styles.css"
 import {partial} from "./utils.js"
 import {renderField, renderControls} from "./html-renderer.js"
 import {cellClickHandler, resetHandler, widthHandler, heightHandler, speedHandler, playHandler, initField, initControls} from "./events.js"
-import {modelInit} from "./state.js"
+import {modelInit, updateState, toggleCell} from "./state.js"
 
 
 
@@ -10,7 +10,13 @@ function main(fieldWidth, fieldHeight) {
   const gameContainer = document.querySelector("#game-field")
   const model = modelInit(30, 50, 700, gameContainer)
   const controlsContainer = document.querySelector("#game-controls")
-
+  
+  model.addObserver('toggle', (data) => { 
+    model.setGrid(toggleCell(model.getGrid(), data.x, data.y))
+  })  
+  model.addObserver('update', (data) => { 
+    model.setGrid(updateState(model.getGrid()))
+  })
   model.addObserver('redraw', (data) => { 
     gameContainer.innerHTML = renderField(model.getGrid(), () => "js-cell")
   })
