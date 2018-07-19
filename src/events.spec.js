@@ -36,6 +36,7 @@ describe("handlers", () => {
       broadcast: () => {},
       resetGrid: () => {},
       setWidth: () => {},
+      setHeight: () => {},
       running: false
     }
     
@@ -116,6 +117,27 @@ describe("handlers", () => {
       el.addEventListener("change", widthHandler(model))
       el.dispatchEvent(changeEvent)
       expect(model.broadcast).toHaveBeenCalledWith('Width', '11')
+    })
+  })
+
+  describe("heightHandler", () => {
+    beforeEach(()=> {
+      el = document.createElement("input")
+      el.value = 11
+      body = document.body
+      body.appendChild(el)
+    })
+    it("should set model height", () => {
+      spyOn(model, "setHeight")
+      el.addEventListener("change", heightHandler(model))
+      el.dispatchEvent(changeEvent)
+      expect(model.setHeight).toHaveBeenCalledWith('11')
+    })
+    it("should make model signal of change Height", () => {
+      spyOn(model, "broadcast")
+      el.addEventListener("change", heightHandler(model))
+      el.dispatchEvent(changeEvent)
+      expect(model.broadcast).toHaveBeenCalledWith('Height', '11')
     })
   })
 })
