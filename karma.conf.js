@@ -25,10 +25,10 @@ module.exports = function(config) {
     exclude: [
     ],
     preprocessors: {
-      'src/**/*.spec.js': [ 'webpack' ]
+      'src/**/*.spec.js': [ 'coverage', 'webpack' ]
     },
     reporters: [
-      'progress', 
+      'progress', 'coverage' 
      // 'kjhtml'
     ],
     port: 9876,
