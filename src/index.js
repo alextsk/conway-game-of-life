@@ -8,7 +8,7 @@ import {modelInit, updateState, toggleCell} from "./state.js"
 
 function main(fieldWidth, fieldHeight) {
   const gameContainer = document.querySelector("#game-field")
-  const model = modelInit(30, 50, 700, gameContainer)
+  const model = modelInit(fieldWidth, fieldHeight, 700, gameContainer)
   const controlsContainer = document.querySelector("#game-controls")
   
   model.addObserver('toggle', (data) => { 
@@ -20,6 +20,15 @@ function main(fieldWidth, fieldHeight) {
   model.addObserver('redraw', (data) => { 
     gameContainer.innerHTML = renderField(model.getGrid(), () => "js-cell")
   })
+
+  model.addObserver("diff", (data) => {
+    const diff = model.diff()
+    diff.map(diff => {
+      let element = gameContainer.querySelector(`#x${diff.x+1}y${diff.y+1}`)
+      element.classList.toggle('alive')
+    })
+  })
+
   model.addObserver('controls', (components) => {
     controlsContainer.innerHTML = renderControls(components)
   })
@@ -79,6 +88,6 @@ function main(fieldWidth, fieldHeight) {
   })
 }
 
-main(50, 50)
+main(200, 200)
 
 

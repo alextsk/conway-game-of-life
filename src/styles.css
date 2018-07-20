@@ -1,6 +1,6 @@
 table{
       border-collapse: collapse;
-      background:  #003355;
+      background:  #000000;
     }
     td{
       box-sizing: border-box;
@@ -8,6 +8,11 @@ table{
       width:15px;
       height: 15px;
       border: 1px dotted rgba(0,0,0,.2);
+      transition: background-color .3s;
+      will-change: background-color;
+    }
+    td:hover{
+      background: red;
     }
     .game-controls > *{
       margin-bottom: 1rem;
@@ -24,7 +29,7 @@ table{
     #speed{
       direction: rtl;
     }
-    .alive{
+    td.alive{
       background: #faa900;
     }
     button{

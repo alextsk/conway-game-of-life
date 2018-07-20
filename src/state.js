@@ -7,7 +7,7 @@ const generateField = (grid) => grid.map(row => row.map(cell => Math.round(Math.
 
 function modelInit (width, height, speed) {
   const observers = []
-
+  var prevGrid = [] 
   function broadcast(type, data) {
     observers.forEach(observer => observer.type == type && observer.handler(data))
   }
@@ -26,6 +26,22 @@ function modelInit (width, height, speed) {
     setGrid(newGrid)
   }
 
+  function diff_(old, newGrid) {
+    let result = []
+    for (let i = 0; i < old.length; i++) {
+      for (let j = 0; j < old[i].length; j++) {
+        if (old[i][j] !== newGrid[i][j]) {
+          result.push({y:i, x:j})
+        }
+      }
+    }
+    return result
+  }
+
+  function diff () {
+    return diff_(prevGrid, grid)
+  }
+
   const getHeight = () => height
   const setHeight = newHeight => {
     height = +newHeight
@@ -40,10 +56,13 @@ function modelInit (width, height, speed) {
   const setSpeed = newSpeed => speed = newSpeed
 
   const getGrid = () => grid
-  const setGrid = newGrid => grid = newGrid
+  const setGrid = newGrid => {
+    prevGrid = grid 
+    return grid = newGrid
+  }
   
   const resetGrid = () => setGrid(generateField(createGrid(width, height)))
-  let grid = resetGrid()
+  var grid = resetGrid()
 
   return {
     getGrid,
@@ -57,6 +76,7 @@ function modelInit (width, height, speed) {
     setHeight,
     addObserver,
     broadcast,
+    diff,
     running: true,
   } 
 }

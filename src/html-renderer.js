@@ -1,7 +1,7 @@
 import {getCell} from "./logic.js"
 
 function makeTableCell (grid, x, y, hfac) {
-  return  `<td class="${hfac(x,y)} ${getCell(grid,x,y) ? 'alive' : 'dead'}" data-x=${x} data-y=${y}></td>`
+  return  `<td class="${hfac(x,y)} ${getCell(grid,x,y) ? 'alive' : 'dead'}" id="x${x}y${y}" data-x=${x} data-y=${y}></td>`
 }
 
 function makeTableRow (grid, y,  hfac) {

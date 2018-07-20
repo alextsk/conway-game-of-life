@@ -11,22 +11,22 @@ function animate(fn, delay, ...args) {
     })
   })(fn, delay, ...args)
 }
-
+let firstRun = true
 function draw(model) {
   if (model.running) {
     model.broadcast("update")
-    model.broadcast("redraw")
-  }
+    //model.broadcast("redraw")
+    model.broadcast("diff")
+}
 }
 
 function cellClickHandler(model) {
   return function(e) {
     if (e.target.classList.contains('js-cell')) {
       const data = e.target.dataset
-      model.broadcast("toggle", data)
-      
+      model.broadcast("toggle", data) 
       requestAnimationFrame(() => {
-        model.broadcast("redraw")
+        model.broadcast("diff")
       })
     } 
   }
@@ -35,6 +35,7 @@ function cellClickHandler(model) {
 function resetHandler(model) {
   return function (e) {
     model.resetGrid()
+    model.broadcast("redraw")
   }
 }
 
