@@ -13,7 +13,7 @@ function animate(fn, delay, ...args) {
 }
 
 function draw(model) {
-  if (model.running) {
+  if (model.isRunning()) {
     model.broadcast('update');
     // model.broadcast("redraw")
     model.broadcast('diff');
@@ -64,8 +64,8 @@ function heightHandler(model) {
 
 function playHandler(model) {
   return function h(e) {
-    model.setRunning(!model.running);
-    e.target.innerHTML = model.running ? 'Pause' : 'Run';
+    model.setRunning(!model.isRunning());
+    e.target.innerHTML = model.isRunning() ? 'Pause' : 'Run';
   };
 }
 

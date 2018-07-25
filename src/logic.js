@@ -1,4 +1,4 @@
-import { partial, deepClone } from './utils.js'
+import { partial, deepClone } from './utils.js';
 
 const gameUpdate = state => deepClone(state);
 
@@ -27,15 +27,15 @@ const killCell = (grid, x, y) => changeCellState(0, grid, x, y);
 const toggleCell = (grid, x, y) => (getCell(grid, x, y) ? killCell(grid, x, y) : reviveCell(grid, x, y));
 
 const updateState = grid => grid
-  .map((row, y) =>
+  .map((row, y) => 
     row.map((el, x) => {
       const neigboursCount = getAliveNeighbours(grid, x + 1, y + 1);
       const isAlive = getCell(grid, x + 1, y + 1) === 1;
       return isAlive
         ? neigboursCount > 3 || neigboursCount < 2 ? 0 : 1
         : (neigboursCount == 3) ? 1 : 0;
-    }),
-  ); 
+    })
+  );
 
 
 export {

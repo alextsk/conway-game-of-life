@@ -1,4 +1,4 @@
-import { getCell } from './logic.js';
+import { getCell } from './logic';
 
 function makeTableCell(grid, x, y, hfac) {
   return `<td class="${hfac(x, y)} ${getCell(grid, x, y) ? 'alive' : 'dead'}" id="x${x}y${y}" data-x=${x} data-y=${y}></td>`;
@@ -23,7 +23,7 @@ function makeTable(grid, hfac = () => '') {
 }
 
 function button(opts) {
-  const selectorType = opts.selector[0] == '.' ? 'class' : 'id';
+  const selectorType = opts.selector[0] === '.' ? 'class' : 'id';
   return `
     <button ${selectorType}="${opts.selector.slice(1)}">${opts.title}</button>
   `;

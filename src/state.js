@@ -4,7 +4,6 @@ const createGrid = (x, y) => (new Array(y)).fill('').map(() => (new Array(x)).fi
 
 const generateField = grid => grid.map(row => row.map(cell => Math.round(Math.random())));
 
-
 function modelInit(width, height, speed) {
   const observers = [];
   let prevGrid = [];
@@ -58,8 +57,8 @@ function modelInit(width, height, speed) {
     return grid = newGrid;
   };
 
-  function setRunning(isRunning) {
-    running = isRunning;
+  function setRunning(val) {
+    running = val;
   }
 
   function isRunning() {
