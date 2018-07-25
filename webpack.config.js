@@ -15,7 +15,16 @@ module.exports = {
         query:{
           presets:["env"]
         }
-      },{
+      },
+      {
+        test: /\.js$/,
+        exclude:/(node_modules)/,
+        loader:"eslint-loader",
+        options: {
+          fix: true
+          }
+      },
+      {
         test: /\.css$/,
         loader: ["style-loader", "css-loader"],
       }

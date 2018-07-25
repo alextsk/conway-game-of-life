@@ -1,111 +1,114 @@
 
 function animate(fn, delay, ...args) {
-  let lastCall = 0
-  return (function animatep(fn, delay, ...args) {
-    requestAnimationFrame( (delta) => {
-      if (delta - lastCall > delay()){
-        lastCall = delta
-        fn(...args)
+  let lastCall = 0;
+  return (function animatep(fnP, delayP, ...argsP) {
+    requestAnimationFrame((delta) => {
+      if (delta - lastCall > delayP()) {
+        lastCall = delta;
+        fnP(...argsP);
       }
-      animatep(fn, delay, ...args)
-    })
-  })(fn, delay, ...args)
+      animatep(fnP, delay, ...argsP);
+    });
+  }(fn, delay, ...args));
 }
-let firstRun = true
+
 function draw(model) {
   if (model.running) {
-    model.broadcast("update")
-    //model.broadcast("redraw")
-    model.broadcast("diff")
-}
+    model.broadcast('update');
+    // model.broadcast("redraw")
+    model.broadcast('diff');
+  }
 }
 
 function cellClickHandler(model) {
-  return function(e) {
+  return function h(e) {
     if (e.target.classList.contains('js-cell')) {
-      const data = e.target.dataset
-      model.broadcast("toggle", data) 
+      const data = e.target.dataset;
+      model.broadcast('toggle', data);
       requestAnimationFrame(() => {
-        model.broadcast("diff")
-      })
-    } 
-  }
+        model.broadcast('diff');
+      });
+    }
+  };
 }
 
 function resetHandler(model) {
-  return function (e) {
-    model.resetGrid()
-    model.broadcast("redraw")
-  }
+  return function h() {
+    model.resetGrid();
+    model.broadcast('redraw');
+  };
 }
 
 function speedHandler(model) {
-  return function (e) {
-    model.setSpeed(e.target.value)
-    model.broadcast("Speed", e.target.value)
-  }
+  return function h(e) {
+    model.setSpeed(e.target.value);
+    model.broadcast('Speed', e.target.value);
+  };
 }
 
 function widthHandler(model) {
-  return function (e) {
-    model.setWidth(e.target.value)
-    model.broadcast("Width", e.target.value)
-    model.broadcast("redraw")
-  }
+  return function h(e) {
+    model.setWidth(e.target.value);
+    model.broadcast('Width', e.target.value);
+    model.broadcast('redraw');
+  };
 }
 
 function heightHandler(model) {
-  return function (e) {
-    model.setHeight(e.target.value)
-    model.broadcast("Height", e.target.value)
-    model.broadcast("redraw")
-  }
+  return function h(e) {
+    model.setHeight(e.target.value);
+    model.broadcast('Height', e.target.value);
+    model.broadcast('redraw');
+  };
 }
 
 function playHandler(model) {
-  return function (e) {
-    model.running = !model.running
-    e.target.innerHTML = model.running ? "Pause" : "Run"
-  }
+  return function h(e) {
+    model.setRunning(!model.running);
+    e.target.innerHTML = model.running ? 'Pause' : 'Run';
+  };
 }
 
 function setSliderEvents(model, container, opts) {
-  const sel = container.querySelector(opts.selector)
-  sel.value = opts.initVal
-  const auxSel = container.querySelector(opts.auxSelector)
-  model.addObserver(opts.title, (value) => auxSel.innerHTML = opts.reporter(value))
-  model.broadcast(opts.title, sel.value)
-  sel.addEventListener('change', opts.handler(model))
+  const sel = container.querySelector(opts.selector);
+  sel.value = opts.initVal;
+  const auxSel = container.querySelector(opts.auxSelector);
+  model.addObserver(opts.title, (value) => {
+    auxSel.innerHTML = opts.reporter(value);
+    return auxSel.innerHTML;
+  });
+  model.broadcast(opts.title, sel.value);
+  sel.addEventListener('change', opts.handler(model));
 }
 
-function initControls({model, container, components}) {
-  model.broadcast("controls", components)
-  
-  setSliderEvents(model, container, components.speed)
-  setSliderEvents(model, container, components.width)
-  setSliderEvents(model, container, components.height)
+function initControls({ model, container, components }) {
+  model.broadcast('controls', components);
 
-  const playBtn = container.querySelector(components.play.selector)
-  playBtn.addEventListener('click', components.play.handler(model))
-  
-  const resetBtn = container.querySelector(components.reset.selector)
-  resetBtn.addEventListener('click', components.reset.handler(model))
+  setSliderEvents(model, container, components.speed);
+  setSliderEvents(model, container, components.width);
+  setSliderEvents(model, container, components.height);
+
+  const playBtn = container.querySelector(components.play.selector);
+  playBtn.addEventListener('click', components.play.handler(model));
+
+  const resetBtn = container.querySelector(components.reset.selector);
+  resetBtn.addEventListener('click', components.reset.handler(model));
 }
 
 
-function initField({model, container, handler}) {
-    model.broadcast("redraw") 
-    document.addEventListener("click", handler(model))
-    animate(draw, model.getSpeed, model)
+function initField({ model, container, handler }) {
+  model.broadcast('redraw');
+  container.addEventListener('click', handler(model));
+  animate(draw, model.getSpeed, model);
 }
 
 export {
-  cellClickHandler, 
-  resetHandler, 
-  speedHandler, 
+  cellClickHandler,
+  resetHandler,
+  speedHandler,
   widthHandler,
-  heightHandler, 
-  playHandler, 
-  initField, 
-  initControls
-}
+  heightHandler,
+  playHandler,
+  initField,
+  initControls,
+};
