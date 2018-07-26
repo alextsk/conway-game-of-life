@@ -76,9 +76,9 @@ function main(fieldWidth, fieldHeight) {
           minVal: 10,
           maxVal: 200,
           initVal: model.getHeight(),
-        },
-      },
-    },
+        }
+      }
+    }
   );
 
   initField({

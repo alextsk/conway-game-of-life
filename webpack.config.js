@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   mode: "development",
@@ -35,6 +36,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       id:"game-field",
       template: "src/index.html"
-    })
+    }),
+    new CopyWebpackPlugin([
+      {from:'favicon.ico',to:'favicon.ico'} 
+    ])
   ]
 }
