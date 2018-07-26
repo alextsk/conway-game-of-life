@@ -1,9 +1,9 @@
-import { partial, deepClone } from './utils.js';
+import { partial, deepClone } from './utils';
 
 const gameUpdate = state => deepClone(state);
 
 const getCell = (state, x, y) => {
-  if (state[y - 1] == undefined || state[y - 1][x - 1] == undefined) return 0;
+  if (state[y - 1] === undefined || state[y - 1][x - 1] === undefined) return 0;
   return +state[y - 1][x - 1];
 };
 
@@ -24,18 +24,19 @@ const reviveCell = (grid, x, y) => changeCellState(1, grid, x, y);
 
 const killCell = (grid, x, y) => changeCellState(0, grid, x, y);
 
-const toggleCell = (grid, x, y) => (getCell(grid, x, y) ? killCell(grid, x, y) : reviveCell(grid, x, y));
+const toggleCell = (grid, x, y) => (
+  getCell(grid, x, y) ? killCell(grid, x, y) : reviveCell(grid, x, y)
+);
 
 const updateState = grid => grid
-  .map((row, y) => 
-    row.map((el, x) => {
-      const neigboursCount = getAliveNeighbours(grid, x + 1, y + 1);
-      const isAlive = getCell(grid, x + 1, y + 1) === 1;
-      return isAlive
-        ? neigboursCount > 3 || neigboursCount < 2 ? 0 : 1
-        : (neigboursCount == 3) ? 1 : 0;
-    })
-  );
+  .map((row, y) => row.map((el, x) => {
+    const neigboursCount = getAliveNeighbours(grid, x + 1, y + 1);
+    const isAlive = getCell(grid, x + 1, y + 1) === 1;
+    if (isAlive) {
+      return (neigboursCount > 3) || (neigboursCount < 2) ? 0 : 1;
+    }
+    return (neigboursCount === 3) ? 1 : 0;
+  }));
 
 
 export {
