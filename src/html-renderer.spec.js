@@ -6,7 +6,7 @@ describe("makeTableCell", () => {
                           [0,0,0],
                           [0,0,0]]
     const html1 = makeTableCell(currentState, 2, 1, () => 'js-cell' )
-    expect(html1).toBe(`<td class="js-cell alive" data-x=2 data-y=1></td>`)    
+    expect(html1).toBe(`<td class="js-cell alive" id="x2y1" data-x=2 data-y=1></td>`)    
                    
   })
 })
@@ -15,7 +15,7 @@ describe("makeTableRow", () => {
   it ("should make a table row", () => {
     const currentState = [[1]]
     const html = makeTableRow(currentState, 0, () => '')
-    const test = `<tr><td class="alive" data-x=1 data-y=1></td></tr>`
+    const test = `<tr><td class="js-cell dead" id="x1y1" data-x=1 data-y=1></td></tr>`
     expect(html.replace(/\s+/g, '').trim()).toEqual(test.replace(/\s+/g, ''))                       
   })
 })
@@ -23,7 +23,7 @@ describe("makeTableRow", () => {
 describe("makeTable", () => {
   it ("should make a table ", () => {
     const currentState = [[0]]
-    let test = `<table><tbody><tr><td class="dead" data-x=1 data-y=1></td></tr></tbody></table>`
+    let test = `<table><tbody><tr><td class="js-cell dead" id="x1y1" data-x=1 data-y=1></td></tr></tbody></table>`
     const result =  makeTable(currentState)
     expect(result.replace(/\s+/g, '')).toEqual(test.replace(/\s+/g, ''))                       
   })

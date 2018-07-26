@@ -1,5 +1,5 @@
 import {cellClickHandler, resetHandler, widthHandler, heightHandler, speedHandler, playHandler, initField, initControls} from "./events.js"
-
+import MSG from './messages';
 describe("browser events", () => {
   it("should know about browser events", () => {
     let x = 0
@@ -31,13 +31,7 @@ describe("handlers", () => {
       cancelable: true
     })
     model = {
-      setGrid: (grid) => {},
-      getGrid: () => [[1,0],[0,1]],
-      broadcast: () => {},
-      resetGrid: () => {},
-      setWidth: () => {},
-      setHeight: () => {},
-      running: false
+      broadcast: () => {}
     }
     
   })
@@ -52,18 +46,18 @@ describe("handlers", () => {
     })
 
     it("should change the cell state", () => {
-      spyOn(model, "setGrid")
+      spyOn(model, "broadcast")
       el.addEventListener("click", cellClickHandler(model))
       el.dispatchEvent(clickEvent)
-      expect(model.setGrid).toHaveBeenCalledWith([[1,0],[1,1]])
+      expect(model.broadcast).toHaveBeenCalledWith(MSG.TOGGLE, jasmine.any(Object) )
     })
 
-    it("should signal model to redraw", (done) => {
+    it("should signal model to differentiate", (done) => {
       spyOn(model, "broadcast")
       el.addEventListener("click", cellClickHandler(model))
       el.dispatchEvent(clickEvent)
       setTimeout(() => {
-        expect(model.broadcast).toHaveBeenCalledWith('redraw')
+        expect(model.broadcast).toHaveBeenCalledWith(MSG.DIFF)
         done()
       }, 100) 
     })
@@ -76,10 +70,10 @@ describe("handlers", () => {
       body.appendChild(el)
     })
     it("should reset model", () => {
-      spyOn(model, "resetGrid")
+      spyOn(model, "broadcast")
       el.addEventListener("click", resetHandler(model))
       el.dispatchEvent(clickEvent)
-      expect(model.resetGrid).toHaveBeenCalled()
+      expect(model.broadcast).toHaveBeenCalledWith(MSG.RESET)
     })
   })
 
@@ -89,13 +83,11 @@ describe("handlers", () => {
       body = document.body
       body.appendChild(el)
     })
-    it("should toggle model running", () => {
-      spyOn(model, "resetGrid")
+    it("should send a signal to play / pause", () => {
+      spyOn(model, "broadcast")
       el.addEventListener("click", playHandler(model))
       el.dispatchEvent(clickEvent)
-      expect(model.running).toBe(true)
-      el.dispatchEvent(clickEvent)
-      expect(model.running).toBe(false)
+      expect(model.broadcast).toHaveBeenCalledWith(MSG.PLAYPAUSE, jasmine.any(Object))
     })
   })
 
@@ -107,16 +99,16 @@ describe("handlers", () => {
       body.appendChild(el)
     })
     it("should set model width", () => {
-      spyOn(model, "setWidth")
+      spyOn(model, "broadcast")
       el.addEventListener("change", widthHandler(model))
       el.dispatchEvent(changeEvent)
-      expect(model.setWidth).toHaveBeenCalledWith('11')
+      expect(model.broadcast).toHaveBeenCalledWith(MSG.REDRAW)
     })
     it("should make model signal of change Width", () => {
       spyOn(model, "broadcast")
       el.addEventListener("change", widthHandler(model))
       el.dispatchEvent(changeEvent)
-      expect(model.broadcast).toHaveBeenCalledWith('Width', '11')
+      expect(model.broadcast).toHaveBeenCalledWith(MSG.WIDTH, '11')
     })
   })
 
@@ -127,17 +119,17 @@ describe("handlers", () => {
       body = document.body
       body.appendChild(el)
     })
-    it("should set model height", () => {
-      spyOn(model, "setHeight")
+    it("should set signal to redraw", () => {
+      spyOn(model, "broadcast")
       el.addEventListener("change", heightHandler(model))
       el.dispatchEvent(changeEvent)
-      expect(model.setHeight).toHaveBeenCalledWith('11')
+      expect(model.broadcast).toHaveBeenCalledWith(MSG.REDRAW)
     })
     it("should make model signal of change Height", () => {
       spyOn(model, "broadcast")
       el.addEventListener("change", heightHandler(model))
       el.dispatchEvent(changeEvent)
-      expect(model.broadcast).toHaveBeenCalledWith('Height', '11')
+      expect(model.broadcast).toHaveBeenCalledWith(MSG.HEIGHT, '11')
     })
   })
 })
