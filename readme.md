@@ -25,5 +25,54 @@
     </li>
     <img src="Diagram.png" alt="architecture">
   </ul>
- 
+<hr>
+<h2>How to use:</h2>
+<ul>
+  <li>
+    Clone the project to your local environment:
+    <div>
+      <code>
+        git clone https://github.com/alextsk/conway-game-of-life.git
+      </code>
+    </div>
+  </li>
+  <li>
+    Install dependencies with
+    <div>
+      <code>
+        npm install
+      </code>
+    </div>
+    or
+    <div>
+      <code>
+        yarn install
+      </code>
+    </div>
+  </li>
+  <li>
+    Run the project with
+    <div>
+      <code>
+        webpack-serve
+      </code>
+    </div>
+  </li>
+  <li>
+    Build the project with
+    <div>
+      <code>
+        webpack
+      </code>
+    </div>
+  </li>
+  <li>
+    run tests with
+    <div>
+      <code>
+        karma start
+      </code>
+    </div>
+  </li>
+</ul>
   
