@@ -11,27 +11,27 @@ import {
   initField,
   initControls,
 } from './events';
+import MSG from './messages';
 import { modelInit, updateState, toggleCell } from './state';
-
 
 function main(fieldWidth, fieldHeight) {
   const gameContainer = document.querySelector('#game-field');
   const model = modelInit(fieldWidth, fieldHeight, 700, gameContainer);
   const controlsContainer = document.querySelector('#game-controls');
 
-  model.addObserver('toggle', (data) => {
+  model.addObserver(MSG.TOGGLE, (data) => {
     model.setGrid(toggleCell(model.getGrid(), data.x, data.y));
   });
 
-  model.addObserver('update', () => {
+  model.addObserver(MSG.UPDATE, () => {
     model.setGrid(updateState(model.getGrid()));
   });
 
-  model.addObserver('redraw', () => {
+  model.addObserver(MSG.REDRAW, () => {
     gameContainer.innerHTML = renderField(model.getGrid(), getCell);
   });
 
-  model.addObserver('diff', () => {
+  model.addObserver(MSG.DIFF, () => {
     const modelDiff = model.diff();
     modelDiff.forEach((diff) => {
       const element = gameContainer.querySelector(`#x${diff.x + 1}y${diff.y + 1}`);
@@ -39,7 +39,7 @@ function main(fieldWidth, fieldHeight) {
     });
   });
 
-  model.addObserver('controls', (components) => {
+  model.addObserver(MSG.CONTROLS, (components) => {
     controlsContainer.innerHTML = renderControls(components);
   });
   const config = {

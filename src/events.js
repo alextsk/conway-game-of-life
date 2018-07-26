@@ -1,3 +1,4 @@
+import MSG from './messages';
 
 function animate(fn, delay, ...args) {
   let lastCall = 0;
@@ -14,19 +15,18 @@ function animate(fn, delay, ...args) {
 
 function draw(model) {
   if (model.isRunning()) {
-    model.broadcast('update');
-    // model.broadcast("redraw")
+    model.broadcast(MSG.UPDATE);
     model.broadcast('diff');
   }
 }
 
 function cellClickHandler(model) {
-  return function h(e) {
-    if (e.target.classList.contains('js-cell')) {
-      const data = e.target.dataset;
-      model.broadcast('toggle', data);
+  return function h(event) {
+    if (event.target.classList.contains('js-cell')) {
+      const data = event.target.dataset;
+      model.broadcast(MSG.TOGGLE, data);
       requestAnimationFrame(() => {
-        model.broadcast('diff');
+        model.broadcast(MSG.DIFF);
       });
     }
   };
@@ -35,30 +35,30 @@ function cellClickHandler(model) {
 function resetHandler(model) {
   return function h() {
     model.resetGrid();
-    model.broadcast('redraw');
+    model.broadcast(MSG.REDRAW);
   };
 }
 
 function speedHandler(model) {
-  return function h(e) {
-    model.setSpeed(e.target.value);
-    model.broadcast('Speed', e.target.value);
+  return function h(event) {
+    model.setSpeed(event.target.value);
+    model.broadcast('Speed', event.target.value);
   };
 }
 
 function widthHandler(model) {
-  return function h(e) {
-    model.setWidth(e.target.value);
-    model.broadcast('Width', e.target.value);
-    model.broadcast('redraw');
+  return function h(event) {
+    model.setWidth(event.target.value);
+    model.broadcast('Width', event.target.value);
+    model.broadcast(MSG.REDRAW);
   };
 }
 
 function heightHandler(model) {
-  return function h(e) {
-    model.setHeight(e.target.value);
-    model.broadcast('Height', e.target.value);
-    model.broadcast('redraw');
+  return function h(event) {
+    model.setHeight(event.target.value);
+    model.broadcast('Height', event.target.value);
+    model.broadcast(MSG.REDRAW);
   };
 }
 
@@ -82,7 +82,7 @@ function setSliderEvents(model, container, opts) {
 }
 
 function initControls({ model, container, components }) {
-  model.broadcast('controls', components);
+  model.broadcast(MSG.CONTROLS, components);
 
   setSliderEvents(model, container, components.speed);
   setSliderEvents(model, container, components.width);
@@ -97,7 +97,7 @@ function initControls({ model, container, components }) {
 
 
 function initField({ model, container, handler }) {
-  model.broadcast('redraw');
+  model.broadcast(MSG.REDRAW);
   container.addEventListener('click', handler(model));
   animate(draw, model.getSpeed, model);
 }
