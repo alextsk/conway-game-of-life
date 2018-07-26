@@ -35,8 +35,11 @@ function selType(sel) {
       return 'class';
     case '#':
       return 'id';
+    default:
+      return 'class';
   }
 }
+
 function renderField(grid, hfac) {
   return `
     <div>
@@ -57,7 +60,7 @@ function slider(opts) {
         ${selType(opts.selector)}="${opts.selector.slice(1)}"
       />
     </label>  
-    <div class="subtitle ${selTypeAux == 'class' ? selAux : ''}" ${selType(opts.auxSelector)}="${selAux}"></div>
+    <div class="subtitle ${selTypeAux === 'class' ? selAux : ''}" ${selType(opts.auxSelector)}="${selAux}"></div>
   </div>
     `;
 }
