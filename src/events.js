@@ -16,7 +16,7 @@ function animate(fn, delay, ...args) {
 function draw(model) {
   if (model.isRunning()) {
     model.broadcast(MSG.UPDATE);
-    model.broadcast('diff');
+    model.broadcast(MSG.DIFF);
   }
 }
 
@@ -34,50 +34,47 @@ function cellClickHandler(model) {
 
 function resetHandler(model) {
   return function h() {
-    model.resetGrid();
+    model.broadcast(MSG.RESET);
     model.broadcast(MSG.REDRAW);
   };
 }
 
 function speedHandler(model) {
   return function h(event) {
-    model.setSpeed(event.target.value);
-    model.broadcast('Speed', event.target.value);
+    model.broadcast(MSG.SPEED, event.target.value);
   };
 }
 
 function widthHandler(model) {
   return function h(event) {
-    model.setWidth(event.target.value);
-    model.broadcast('Width', event.target.value);
+    model.broadcast(MSG.WIDTH, event.target.value);
     model.broadcast(MSG.REDRAW);
   };
 }
 
 function heightHandler(model) {
   return function h(event) {
-    model.setHeight(event.target.value);
-    model.broadcast('Height', event.target.value);
+    model.broadcast(MSG.HEIGHT, event.target.value);
     model.broadcast(MSG.REDRAW);
   };
 }
 
 function playHandler(model) {
   return function h(e) {
-    model.setRunning(!model.isRunning());
-    e.target.innerHTML = model.isRunning() ? 'Pause' : 'Run';
+    model.broadcast(MSG.PLAYPAUSE, e.target);
   };
 }
+
 
 function setSliderEvents(model, container, opts) {
   const sel = container.querySelector(opts.selector);
   sel.value = opts.initVal;
   const auxSel = container.querySelector(opts.auxSelector);
-  model.addObserver(opts.title, (value) => {
+  model.addObserver(opts.message, (value) => {
     auxSel.innerHTML = opts.reporter(value);
     return auxSel.innerHTML;
   });
-  model.broadcast(opts.title, sel.value);
+  model.broadcast(opts.message, sel.value);
   sel.addEventListener('change', opts.handler(model));
 }
 

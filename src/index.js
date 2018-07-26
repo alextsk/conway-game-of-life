@@ -42,6 +42,29 @@ function main(fieldWidth, fieldHeight) {
   model.addObserver(MSG.CONTROLS, (components) => {
     controlsContainer.innerHTML = renderControls(components);
   });
+
+  model.addObserver(MSG.WIDTH, (value) => {
+    model.setWidth(value);
+  });
+
+  model.addObserver(MSG.HEIGHT, (value) => {
+    model.setHeight(value);
+  });
+
+  model.addObserver(MSG.SPEED, (value) => {
+    model.setSpeed(value);
+  });
+
+  model.addObserver(MSG.RESET, () => {
+    model.resetGrid();
+  });
+
+  model.addObserver(MSG.PLAYPAUSE, (value) => {
+    model.setRunning(!model.isRunning());
+    const target = value;
+    target.innerHTML = model.isRunning() ? 'Pause' : 'Run';
+  });
+
   const config = {
     model,
     container: controlsContainer,
@@ -65,6 +88,7 @@ function main(fieldWidth, fieldHeight) {
         minVal: 100,
         maxVal: 2000,
         initVal: model.getSpeed(),
+        message: MSG.SPEED,
       },
       width: {
         selector: '#width',
@@ -75,6 +99,7 @@ function main(fieldWidth, fieldHeight) {
         minVal: 10,
         maxVal: 200,
         initVal: model.getWidth(),
+        message: MSG.WIDTH,
       },
       height: {
         selector: '#height',
@@ -85,6 +110,7 @@ function main(fieldWidth, fieldHeight) {
         minVal: 10,
         maxVal: 200,
         initVal: model.getHeight(),
+        message: MSG.HEIGHT,
       },
     },
   };
