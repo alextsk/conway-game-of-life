@@ -88,4 +88,4 @@ function main(fieldWidth, fieldHeight) {
   });
 }
 
-main(200, 200);
+main(50, 50);
