@@ -1,5 +1,6 @@
 import './styles.css';
 import { renderField, renderControls } from './html-renderer';
+import { getCell } from './logic';
 import {
   cellClickHandler,
   resetHandler,
@@ -27,7 +28,7 @@ function main(fieldWidth, fieldHeight) {
   });
 
   model.addObserver('redraw', () => {
-    gameContainer.innerHTML = renderField(model.getGrid(), () => 'js-cell');
+    gameContainer.innerHTML = renderField(model.getGrid(), getCell);
   });
 
   model.addObserver('diff', () => {

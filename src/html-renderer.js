@@ -1,22 +1,21 @@
-import { getCell } from './logic';
 
-function makeTableCell(grid, x, y, hfac) {
-  return `<td class="${hfac(x, y)} ${getCell(grid, x, y) ? 'alive' : 'dead'}" id="x${x}y${y}" data-x=${x} data-y=${y}></td>`;
+function makeTableCell(grid, x, y, getCell) {
+  return `<td class="js-cell ${getCell(grid, x, y) ? 'alive' : 'dead'}" id="x${x}y${y}" data-x=${x} data-y=${y}></td>`;
 }
 
-function makeTableRow(grid, y, hfac) {
+function makeTableRow(grid, y, getCell) {
   return (
     `<tr>
-      ${grid[y].map((cell, x) => makeTableCell(grid, x + 1, y + 1, hfac)).join('')}
+      ${grid[y].map((cell, x) => makeTableCell(grid, x + 1, y + 1, getCell)).join('')}
     </tr>`
   );
 }
 
-function makeTable(grid, hfac = () => '') {
+function makeTable(grid, getCell = () => '') {
   return ` 
   <table>
     <tbody>
-      ${grid.map((row, y) => makeTableRow(grid, y, hfac)).join('')}
+      ${grid.map((row, y) => makeTableRow(grid, y, getCell)).join('')}
     </tbody>
   </table>
   `;
@@ -40,13 +39,14 @@ function selType(sel) {
   }
 }
 
-function renderField(grid, hfac) {
+function renderField(grid, getCell) {
   return `
     <div>
-      ${makeTable(grid, hfac)}
+      ${makeTable(grid, getCell)}
     </div>
     `;
 }
+
 function slider(opts) {
   const selTypeAux = selType(opts.auxSelector);
   const selAux = opts.auxSelector.slice(1);
