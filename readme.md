@@ -54,7 +54,13 @@
     Run the project with
     <div>
       <code>
-        webpack-serve
+        npm run serve
+      </code>
+    </div>
+    and open the browser with the url given you by webpack, usually it is 
+    <div>
+      <code>
+         http://localhost:8080
       </code>
     </div>
   </li>
@@ -70,7 +76,7 @@
     run tests with
     <div>
       <code>
-        karma start
+        npm run test
       </code>
     </div>
   </li>
