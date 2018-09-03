@@ -1,4 +1,4 @@
-import MSG from './messages';
+import MSG from './messages.ts';
 
 function animate(fn, delay, ...args) {
   let lastCall = 0;

@@ -10,13 +10,14 @@ import {
   playHandler,
   initField,
   initControls,
-} from './events';
-import MSG from './messages';
-import { modelInit, updateState, toggleCell } from './state';
+} from './events.ts';
+import  MSG from './messages.ts';
 
-function main(fieldWidth, fieldHeight) {
+import { State, updateState, toggleCell } from './state.ts';
+
+function main(fieldWidth:number, fieldHeight:number) {
   const gameContainer = document.querySelector('#game-field');
-  const model = modelInit(fieldWidth, fieldHeight, 700, gameContainer);
+  const model = new State(fieldWidth, fieldHeight, 700);
   const controlsContainer = document.querySelector('#game-controls');
 
   model.addObserver(MSG.TOGGLE, (data) => {
