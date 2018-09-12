@@ -1,66 +1,64 @@
 import './styles.css';
-import { renderField, renderControls } from './html-renderer';
-import { getCell } from './logic';
-import {
-  cellClickHandler,
-  resetHandler,
-  widthHandler,
-  heightHandler,
-  speedHandler,
-  playHandler,
-  initField,
-  initControls,
-} from './events.ts';
-import  MSG from './messages.ts';
+import Template from './Template';
+import Logic from './Logic';
+import Events from './Events';
+import Messages from './Messages';
+import State from './State';
 
-import { State, updateState, toggleCell } from './state.ts';
-
-function main(fieldWidth:number, fieldHeight:number) {
+function main(fieldWidth:number, fieldHeight:number) : void {
   const gameContainer = document.querySelector('#game-field');
-  const model = new State(fieldWidth, fieldHeight, 700);
   const controlsContainer = document.querySelector('#game-controls');
+  const gameMessageContainer = document.getElementsByClassName('js-game__message');
+  const model = new State(fieldWidth, fieldHeight, 500);
+  const logic = new Logic();
+  const events = new Events();
+  const renderer = new Template(logic.getCellState);
 
-  model.addObserver(MSG.TOGGLE, (data) => {
-    model.setGrid(toggleCell(model.getGrid(), data.x, data.y));
+  model.addObserver(Messages.TOGGLE, (data) => {
+    model.setGrid(logic.toggleCell(model.getGrid(), data.x, data.y), true);
+    model.isStable = false;
   });
 
-  model.addObserver(MSG.UPDATE, () => {
-    model.setGrid(updateState(model.getGrid()));
+  model.addObserver(Messages.UPDATE, () => {
+    model.setGrid(logic.updateState(model.getGrid()), true);
   });
 
-  model.addObserver(MSG.REDRAW, () => {
-    gameContainer.innerHTML = renderField(model.getGrid(), getCell);
+  model.addObserver(Messages.REDRAW, () => {
+    gameContainer.innerHTML = renderer.renderField(model.getGrid());
   });
 
-  model.addObserver(MSG.DIFF, () => {
-    const modelDiff = model.diff();
-    modelDiff.forEach((diff) => {
+  model.addObserver(Messages.GAMESTATUS, (message) => {
+    gameMessageContainer[0].innerHTML = message;
+  });
+
+  model.addObserver(Messages.DIFF, () => {
+    model.nextState((diff) => {
       const element = gameContainer.querySelector(`#x${diff.x + 1}y${diff.y + 1}`);
       element.classList.toggle('alive');
     });
   });
 
-  model.addObserver(MSG.CONTROLS, (components) => {
-    controlsContainer.innerHTML = renderControls(components);
+  model.addObserver(Messages.CONTROLS, (components) => {
+    controlsContainer.innerHTML = renderer.renderControls(components);
   });
 
-  model.addObserver(MSG.WIDTH, (value) => {
+  model.addObserver(Messages.WIDTH, (value) => {
     model.setWidth(value);
   });
 
-  model.addObserver(MSG.HEIGHT, (value) => {
+  model.addObserver(Messages.HEIGHT, (value) => {
     model.setHeight(value);
   });
 
-  model.addObserver(MSG.SPEED, (value) => {
+  model.addObserver(Messages.SPEED, (value) => {
     model.setSpeed(value);
   });
 
-  model.addObserver(MSG.RESET, () => {
+  model.addObserver(Messages.RESET, () => {
     model.resetGrid();
   });
 
-  model.addObserver(MSG.PLAYPAUSE, (value) => {
+  model.addObserver(Messages.PLAYPAUSE, (value) => {
     model.setRunning(!model.isRunning());
     const target = value;
     target.innerHTML = model.isRunning() ? 'Pause' : 'Run';
@@ -72,57 +70,57 @@ function main(fieldWidth:number, fieldHeight:number) {
     components: {
       reset: {
         selector: '#reset',
-        handler: resetHandler,
+        handler: events.resetHandler,
         title: 'Reset',
       },
       play: {
         selector: '#run',
-        handler: playHandler,
+        handler: events.playHandler,
         title: 'Pause',
       },
       speed: {
         selector: '#speed',
         auxSelector: '#speed-number',
         title: 'Speed',
-        handler: speedHandler,
+        handler: events.speedHandler,
         reporter: val => `${(1000 / val).toFixed(2)} renders/sec`,
         minVal: 100,
         maxVal: 2000,
         initVal: model.getSpeed(),
-        message: MSG.SPEED,
+        message: Messages.SPEED,
       },
       width: {
         selector: '#width',
         auxSelector: '#width-number',
         title: 'Width',
-        handler: widthHandler,
+        handler: events.widthHandler,
         reporter: val => `${val} cells`,
-        minVal: 10,
-        maxVal: 200,
+        minVal: 5,
+        maxVal: 100,
         initVal: model.getWidth(),
-        message: MSG.WIDTH,
+        message: Messages.WIDTH,
       },
       height: {
         selector: '#height',
         auxSelector: '#height-number',
         title: 'Height',
-        handler: heightHandler,
+        handler: events.heightHandler,
         reporter: val => `${val} cells`,
-        minVal: 10,
-        maxVal: 200,
+        minVal: 5,
+        maxVal: 100,
         initVal: model.getHeight(),
-        message: MSG.HEIGHT,
+        message: Messages.HEIGHT,
       },
     },
   };
 
-  initControls(config);
+  events.initControls(config);
 
-  initField({
+  events.initField({
     model,
     container: gameContainer,
-    handler: cellClickHandler,
+    handler: events.cellClickHandler,
   });
 }
 
-main(50, 50);
+main(10, 10);
