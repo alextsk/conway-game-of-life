@@ -2,5 +2,6 @@ node_modules/
 _reports/
 coverage/
 dist/
+.idea
 .publish
 yarn-error.log

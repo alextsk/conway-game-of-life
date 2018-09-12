@@ -1,43 +1,43 @@
-export { updateState, toggleCell } from './logic';
+import Observer from './Observer';
+import { deepClone } from './utils';
 
-import Observer from './observer.ts';
-enum CellState {Dead, ALive} 
+enum CellState {Dead, Alive} 
 type Grid = CellState[][];
 
-
-
-
 class State extends Observer{
-
-  private prevGrid : Grid = [];
+  private prevGrids : Grid[] = [];
   private running : boolean = true;
-  private grid : Grid = this.resetGrid();
+  private grid : Grid = [];
+  public isStable = false;
 
   constructor(public width:number, public height:number, public speed:number) {
-    super()
-    this.getSpeed = this.getSpeed.bind(this)
-    this.setSpeed = this.setSpeed.bind(this)
+    super();
+    this.getSpeed = this.getSpeed.bind(this);
+    this.setSpeed = this.setSpeed.bind(this);
+    this.grid = this.resetGrid();
   }
 
   generateField(grid) : Grid {
+    this.isStable = false;
+    this.prevGrids = [];
     return grid.map(row => row.map(() => this.makeRandomCell()));
   }
   
-  makeRandomCell(){
-    return Math.random() > .5 ? CellState.ALive : CellState.Dead
+  makeRandomCell() {
+    return Math.random() > .5 ? CellState.Alive : CellState.Dead;
   }
 
-  createGrid(x, y) : Grid {
-    return (new Array(y)).fill('').map(() => (new Array(x)).fill(CellState.Dead));
+  createGrid(x: number = this.width, y: number = this.height) : Grid {
+    return <any[]>(new Array(y)).fill('').map(() => (new Array(x)).fill(CellState.Dead));// tslint:disable-line
   } 
 
   getGrid() : Grid {
     return this.grid;
   }
 
-  setGrid(newGrid) {
-    this.prevGrid = this.grid || [];
-    this.grid = newGrid;
+  setGrid(newGrid, changeHistory: boolean = false) {
+    changeHistory && this.prevGrids.push(deepClone(this.grid));
+    this.grid = deepClone(newGrid);
     return this.grid;
   }
 
@@ -54,9 +54,21 @@ class State extends Observer{
     const newrow = Array(+newWidth).fill(0);
     const newGrid = this.getGrid().map(row => newrow.map((el, i) => row[i] || el));
     this.setGrid(newGrid);
-  };
+  }
 
-  diffP(old, newGrid) {
+  isRepeatingState(): boolean {
+    return this.prevGrids.some(
+      (grid) => {
+        if (grid.length === 0) return false;
+        if (grid.length !== this.grid.length ||
+            grid[0].length !== this.grid[0].length) {
+          return false;
+        }
+        return (State.diffP(grid, this.grid)).length === 0;
+      });
+  }
+
+  static diffP(old, newGrid) : {x:number, y: number}[] {
     const result = [];
     for (let i = 0; i < old.length; i += 1) {
       for (let j = 0; j < old[i].length; j += 1) {
@@ -68,8 +80,15 @@ class State extends Observer{
     return result;
   }
 
+  nextState(fn: (diff: {x: number, y: number}) => void) {
+    if (this.prevGrids.length > 0) {
+      this.isStable = this.isRepeatingState();
+      this.diff().forEach(fn);
+    }
+  }
+
   diff() {
-    return this.diffP(this.prevGrid, this.grid);
+    return State.diffP(this.prevGrids[this.prevGrids.length - 1], this.grid);
   }
 
   getHeight() {
@@ -100,4 +119,5 @@ class State extends Observer{
   }
 }
 
-export { State };
+export default State;
+export { CellState };

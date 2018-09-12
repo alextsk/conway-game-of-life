@@ -1,4 +1,4 @@
-enum Msg{
+enum Messages{
   TOGGLE= 'toggle',
   UPDATE= 'update',
   REDRAW= 'redraw',
@@ -9,6 +9,7 @@ enum Msg{
   HEIGHT= 'height',
   RESET= 'reset',
   PLAYPAUSE= 'running',
-};
+  GAMESTATUS= 'gamestatus',
+}
 
-export default Msg;
+export default Messages;
