@@ -1,47 +1,37 @@
 
-// Generated on Wed Jul 04 2018 15:59:31 GMT+0700 (Красноярское время (зима))
-var webpackConfig = require('./webpack.config.js');
 module.exports = function(config) {
-  config.set({
-    basePath: '.',
+    config.set({
+        frameworks: ["jasmine"],
+        exclude:['node_modules'],
+        webpack:{
+            resolve: {
+                extensions: [".ts", ".tsx"]
+            },
+            mode: "none",
+            module: {
+                rules: [
+                    {
+                        test: /\.ts$/,
+                        loader: 'awesome-typescript-loader',
+                        exclude:/(node_modules)/,
+                        options: {
+                            configFile :'tsconfig.json'
+                        }
+                    }
+                ]
+            }
+        },
+        files: [
+            "./src/**/*.spec.ts" 
+        ],
+        preprocessors: {
+            "./**/*.ts": ["webpack", 'coverage','sourcemap'],
+            "./**/*.spec.ts": ["webpack", 'sourcemap','coverage'],
 
-    webpack: {
-      mode: "none",
-      module: {
-        rules: [
-          {
-            test: /\.spec.js$/,
-            loader: 'babel-loader',
-            exclude:/(node_modules)/,
-          }
-        ]
-      }
-    },
+        },
 
-    frameworks: ['jasmine'],
-    files: [
-     "src/**/*.spec.js"
-    ],
-    exclude: [
-    ],
-    preprocessors: {
-      'src/**/*.spec.js': [ 'coverage', 'webpack' ]
-    },
-    reporters: [
-      'progress', 'coverage' 
-     // 'kjhtml'
-    ],
-    port: 9876,
-    colors: true,
-    logLevel: config.LOG_INFO,
-    autoWatch: true,
-    browsers: [
-      'FirefoxHeadless',
-      //'Chrome'
-      ],
-    singleRun: false,
-    // Concurrency level
-    // how many browser should be started simultaneous
-    concurrency: Infinity
-  })
-}
+        remapCoverageReporter: { html: './coverage' },
+        reporters: ["progress", 'coverage', 'remap-coverage'],
+        browsers: ["FirefoxHeadless"]
+    });
+};

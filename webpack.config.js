@@ -1,14 +1,23 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-var CopyWebpackPlugin = require('copy-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const TSLintPlugin = require('tslint-webpack-plugin');
 
 module.exports = {
   mode: "development",
-  entry: './src/index.js',
+  entry: './src/index.ts',
   output: {
     filename: 'main.js',
   },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
+  },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
+      },
       {
         test: /\.js$/,
         exclude:/(node_modules)/,
@@ -38,7 +47,10 @@ module.exports = {
       template: "src/index.html"
     }),
     new CopyWebpackPlugin([
-      {from:'favicon.ico',to:'favicon.ico'} 
-    ])
+      {from:'favicon.ico', to:'favicon.ico'} 
+    ]),
+    new TSLintPlugin({
+      files: ['./src/**/*.ts']
+    })
   ]
 }
