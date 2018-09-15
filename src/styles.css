@@ -26,10 +26,10 @@ table{
     font-style: italic;
     font-size: 0.8rem;
   }
-  #speed{
+  .game__slider--speed{
     direction: rtl;
   }
-  td.alive{
+  td.cell--alive{
     background: #faa900;
   }
   button{

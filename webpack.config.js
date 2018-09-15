@@ -43,7 +43,6 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      id:"game-field",
       template: "src/index.html"
     }),
     new CopyWebpackPlugin([

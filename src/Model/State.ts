@@ -1,5 +1,5 @@
 import Observer from './Observer';
-import { deepClone } from './utils';
+import { deepClone } from '../utils';
 
 enum CellState {Dead, Alive} 
 type Grid = CellState[][];
@@ -7,14 +7,12 @@ type Grid = CellState[][];
 class State extends Observer{
   private prevGrids : Grid[] = [];
   private running : boolean = true;
-  private grid : Grid = [];
+  private grid : Grid = this.createGrid(this.width, this.height);
   public isStable = false;
 
-  constructor(public width:number, public height:number, public speed:number) {
+  constructor(public width:number = 10, public height:number = 10) {
     super();
-    this.getSpeed = this.getSpeed.bind(this);
-    this.setSpeed = this.setSpeed.bind(this);
-    this.grid = this.resetGrid();
+    this.resetGrid();
   }
 
   generateField(grid) : Grid {
@@ -41,8 +39,8 @@ class State extends Observer{
     return this.grid;
   }
 
-  resetGrid() : Grid {
-    return this.setGrid(this.generateField(this.createGrid(this.width, this.height)));
+  resetGrid() : void {
+    this.setGrid(this.generateField(this.createGrid(this.width, this.height)));
   } 
   
   getWidth () : number {
@@ -100,14 +98,6 @@ class State extends Observer{
     const newGrid = Array(+newHeight).fill('');
     const res = newGrid.map((row, i) => this.getGrid()[i] || Array(this.width).fill(0));
     this.setGrid(res);
-  }
-
-  getSpeed() {
-    return this.speed;
-  }
-
-  setSpeed(newSpeed) {
-    this.speed = newSpeed;
   }
 
   setRunning(val: boolean) {

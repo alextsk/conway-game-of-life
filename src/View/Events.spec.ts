@@ -1,5 +1,5 @@
 import Events from './Events';
-import Messages from './Messages';
+import Messages from '../Model/Messages';
 
 describe('browser events', () => {
   it('should know about browser events', () => {

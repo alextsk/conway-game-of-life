@@ -1,5 +1,5 @@
 import Template from './Template';
-import State, { CellState } from './State';
+import State, { CellState } from '../Model/State';
 
 describe('render tests', () => {
   describe('makeTableCell', () => {

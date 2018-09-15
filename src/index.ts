@@ -1,9 +1,32 @@
 import './styles.css';
-import Template from './Template';
-import Logic from './Logic';
-import Events from './Events';
-import Messages from './Messages';
-import State from './State';
+
+import Messages from './Model/Messages';
+import Model from './Model/Model';
+import View from './View/View';
+
+class Controller {
+  constructor(model: Model, view: View) {
+    const events = view.getEventsObject();
+
+    events.addObserver(Messages.UPDATE, () => {
+      console.log('events.addObserver(Messages.UPDATE) in index ');
+      model.broadcast(Messages.UPDATE);
+    });
+
+    model.addObserver(Messages.REDRAW, (payload) => {
+      console.log('model.addObserver(Messages.REDRAW: payload', payload);
+      events.broadcast(Messages.REDRAW, payload);
+    });
+
+    events.addObserver(Messages.RESET, () => {
+      model.broadcast(Messages.RESET);
+    });
+  }
+}
+
+const controller = new Controller(new Model(), new View('.game'));
+
+/*
 
 function main(fieldWidth:number, fieldHeight:number) : void {
   const gameContainer = document.querySelector('#game-field');
@@ -64,55 +87,7 @@ function main(fieldWidth:number, fieldHeight:number) : void {
     target.innerHTML = model.isRunning() ? 'Pause' : 'Run';
   });
 
-  const config = {
-    model,
-    container: controlsContainer,
-    components: {
-      reset: {
-        selector: '#reset',
-        handler: events.resetHandler,
-        title: 'Reset',
-      },
-      play: {
-        selector: '#run',
-        handler: events.playHandler,
-        title: 'Pause',
-      },
-      speed: {
-        selector: '#speed',
-        auxSelector: '#speed-number',
-        title: 'Speed',
-        handler: events.speedHandler,
-        reporter: val => `${(1000 / val).toFixed(2)} renders/sec`,
-        minVal: 100,
-        maxVal: 2000,
-        initVal: model.getSpeed(),
-        message: Messages.SPEED,
-      },
-      width: {
-        selector: '#width',
-        auxSelector: '#width-number',
-        title: 'Width',
-        handler: events.widthHandler,
-        reporter: val => `${val} cells`,
-        minVal: 5,
-        maxVal: 100,
-        initVal: model.getWidth(),
-        message: Messages.WIDTH,
-      },
-      height: {
-        selector: '#height',
-        auxSelector: '#height-number',
-        title: 'Height',
-        handler: events.heightHandler,
-        reporter: val => `${val} cells`,
-        minVal: 5,
-        maxVal: 100,
-        initVal: model.getHeight(),
-        message: Messages.HEIGHT,
-      },
-    },
-  };
+
 
   events.initControls(config);
 
@@ -122,5 +97,6 @@ function main(fieldWidth:number, fieldHeight:number) : void {
     handler: events.cellClickHandler,
   });
 }
+*/
 
-main(10, 10);
+
