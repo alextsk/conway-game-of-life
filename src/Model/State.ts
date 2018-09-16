@@ -1,5 +1,6 @@
-import Observer from './Observer';
-import { deepClone } from '../utils';
+import Observer from '../Utilities/Observer';
+import { deepClone } from '../Utilities/utils';
+import Logic from './Logic';
 
 enum CellState {Dead, Alive} 
 type Grid = CellState[][];
@@ -9,9 +10,11 @@ class State extends Observer{
   private running : boolean = true;
   private grid : Grid = this.createGrid(this.width, this.height);
   public isStable = false;
+  private logic;
 
   constructor(public width:number = 10, public height:number = 10) {
     super();
+    this.logic = new Logic();
     this.resetGrid();
   }
 
@@ -39,6 +42,15 @@ class State extends Observer{
     return this.grid;
   }
 
+  toggleCell(x, y) {
+    this.setGrid(this.logic.toggleCell(this.getGrid(), x, y), true);
+  }
+
+  getNextState() {
+    this.setGrid(this.logic.updateState(this.getGrid()), true);
+    return this.isRepeatingState();
+  }
+  
   resetGrid() : void {
     this.setGrid(this.generateField(this.createGrid(this.width, this.height)));
   } 
@@ -62,11 +74,11 @@ class State extends Observer{
             grid[0].length !== this.grid[0].length) {
           return false;
         }
-        return (State.diffP(grid, this.grid)).length === 0;
+        return (State.diff(grid, this.grid)).length === 0;
       });
   }
 
-  static diffP(old, newGrid) : {x:number, y: number}[] {
+  static diff(old, newGrid) : {x:number, y: number}[] {
     const result = [];
     for (let i = 0; i < old.length; i += 1) {
       for (let j = 0; j < old[i].length; j += 1) {
@@ -78,15 +90,15 @@ class State extends Observer{
     return result;
   }
 
-  nextState(fn: (diff: {x: number, y: number}) => void) {
+  getDiffOfNextState(fn: (difference: {x: number, y: number}) => void) {
     if (this.prevGrids.length > 0) {
       this.isStable = this.isRepeatingState();
-      this.diff().forEach(fn);
+      this.getRecentChanges().forEach(fn);
     }
   }
 
-  diff() {
-    return State.diffP(this.prevGrids[this.prevGrids.length - 1], this.grid);
+  getRecentChanges() {
+    return State.diff(this.prevGrids[this.prevGrids.length - 1], this.grid);
   }
 
   getHeight() {

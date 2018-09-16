@@ -8,7 +8,7 @@ enum Messages{
   WIDTH= 'width',
   HEIGHT= 'height',
   RESET= 'reset',
-  PLAYPAUSE= 'running',
+  RUNSTATUS= 'running',
   GAMESTATUS= 'gamestatus',
 }
 

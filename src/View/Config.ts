@@ -1,29 +1,33 @@
-import Messages from '../Model/Messages';
+import Messages from '../Utilities/Messages';
 
 const config = selector => ({
+  selector,
   controls:{
     selector: `${selector}__controls`,
     components: {
       reset: {
-        selector: '#reset',
+        selector: `${selector}__button--reset`,
         title: 'Reset',
       },
       play: {
-        selector: '#run',
+        selector: `${selector}__button--run`,
         title: 'Pause',
+        titlePaused : 'Run',
       },
       speed: {
-        selector: '#speed',
+        selector: `${selector}__slider--speed`,
+        class:`${selector}__slider`,
+        modifier: '--speed',
         auxSelector: '#speed-number',
         title: 'Speed',
         reporter: val => `${(1000 / val).toFixed(2)} renders/sec`,
         minVal: 100,
         maxVal: 2000,
-        initVal: 7000,
+        initVal: 700,
         message: Messages.SPEED,
       },
       width: {
-        selector: '#width',
+        selector: `${selector}__slider--width`,
         auxSelector: '#width-number',
         title: 'Width',
         reporter: val => `${val} cells`,
@@ -33,7 +37,7 @@ const config = selector => ({
         message: Messages.WIDTH,
       },
       height: {
-        selector: '#height',
+        selector: `${selector}__slider--height`,
         auxSelector: '#height-number',
         title: 'Height',
         reporter: val => `${val} cells`,
@@ -41,6 +45,11 @@ const config = selector => ({
         maxVal: 100,
         initVal: 10,
         message: Messages.HEIGHT,
+      },
+      message: {
+        selector: `${selector}__slider--message`,
+        textStable: 'Game is stable',
+        textUnstable: 'Game is playing',
       },
     },
   },

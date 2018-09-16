@@ -1,4 +1,4 @@
-import { partial, deepClone } from '../utils';
+import { partial, deepClone } from '../Utilities/utils';
 
 class Logic {
   gameUpdate(state) {

@@ -73,15 +73,22 @@ class Template {
     `;
   }
 
+  message(opts) {
+    return `
+      <div class=${opts.selector.slice(1)}>${opts.textUnstable}</div>
+    `;
+  }
+
   renderControls() {
     return `
       <div class="${this.config.controls.selector.slice(1)}">
+        ${this.message(this.config.controls.components.message)}
+        <hr>        
         ${this.button(this.config.controls.components.play)}
         ${this.button(this.config.controls.components.reset)}
         ${this.slider(this.config.controls.components.speed)}
         ${this.slider(this.config.controls.components.width)}
         ${this.slider(this.config.controls.components.height)}
-        <div class="game__message js-game__message"></div>
       </div>
     `;
   }

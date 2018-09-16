@@ -1,7 +1,7 @@
-import Logic from './Logic';
+
 import State from './State';
-import Messages from './Messages';
-import Observer from './Observer';
+import Messages from '../Utilities/Messages';
+import Observer from '../Utilities/Observer';
 
 class Model extends Observer{
   state: any;
@@ -9,29 +9,18 @@ class Model extends Observer{
   constructor() {
     super();
     const state = new State();
-    const logic = new Logic();
 
-    state.addObserver(Messages.TOGGLE, (data) => {
-      state.setGrid(logic.toggleCell(state.getGrid(), data.x, data.y), true);
+    this.addObserver(Messages.TOGGLE, (data) => {
+      state.toggleCell(data.x, data.y);
       state.isStable = false;
-    });
-
-    this.addObserver(Messages.UPDATE, () => {
-      console.log('Update in Model');
-      state.setGrid(logic.updateState(state.getGrid()), true);
       this.broadcast(Messages.REDRAW, state.getGrid());
     });
 
-    // state.addObserver(Messages.GAMESTATUS, (message) => {
-    //   gameMessageContainer[0].innerHTML = message;
-    // });
-    //
-    // state.addObserver(Messages.DIFF, () => {
-    //   state.nextState((diff) => {
-    //     const element = gameContainer.querySelector(`#x${diff.x + 1}y${diff.y + 1}`);
-    //     element.classList.toggle('alive');
-    //   });
-    // });
+    this.addObserver(Messages.UPDATE, () => {
+      const stability =  state.getNextState();
+      this.broadcast(Messages.GAMESTATUS, stability);
+      this.broadcast(Messages.REDRAW, state.getGrid());
+    });
 
     this.addObserver(Messages.WIDTH, (value) => {
       state.setWidth(value);
@@ -47,12 +36,6 @@ class Model extends Observer{
       state.resetGrid();
       this.broadcast(Messages.REDRAW, state.getGrid());
     });
-
-  /*  state.addObserver(Messages.PLAYPAUSE, (value) => {
-      state.setRunning(!state.isRunning());
-      const target = value;
-      target.innerHTML = state.isRunning() ? 'Pause' : 'Run';
-    });*/
   }
 }
 export default Model;
