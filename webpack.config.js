@@ -4,7 +4,7 @@ const TSLintPlugin = require('tslint-webpack-plugin');
 
 module.exports = {
   mode: "development",
-  entry: './src/Controller.ts',
+  entry: './src/index.ts',
   output: {
     filename: 'main.js',
   },
