@@ -5,10 +5,6 @@ import View from '../View/View';
 class Controller {
   private views = [];
   private models = [];
-
-  constructor() {
-    
-  }
   
   resetObservers() {
     this.views.forEach((view) => {

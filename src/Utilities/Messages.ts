@@ -3,7 +3,6 @@ enum Messages{
   UPDATE= 'update',
   REDRAW= 'redraw',
   CONTROLS= 'controls',
-  DIFF= 'diff',
   SPEED = 'speedupdated',
   WIDTH= 'width',
   HEIGHT= 'height',

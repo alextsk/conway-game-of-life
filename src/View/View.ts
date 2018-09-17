@@ -1,7 +1,7 @@
 import Messages from '../Utilities/Messages';
 import Config from './Config';
 import Observer from '../Utilities/Observer';
-import Template from './Template';
+import Template from './Template/Template';
 
 class View extends Observer {
   isStable : () => boolean = () => this.stable;
@@ -26,8 +26,7 @@ class View extends Observer {
     gameContainer.innerHTML = (this.template.renderControls()) + (this.template.renderField());
     this.controlsContainer = gameContainer.querySelector(this.config.controls.selector);
     this.fieldContainer = gameContainer.querySelector(this.config.field.selector);
-    this.statusMessage = gameContainer.querySelector(this.config.controls.components.message.selector);
-
+    this.statusMessage = gameContainer.querySelector(this.config.controls.components.message.selector);/*tslint:disable-line */
     this.addObserver(Messages.SPEED, (value) => {
       this.speed = value;
     });
@@ -37,7 +36,7 @@ class View extends Observer {
     });
 
     this.addObserver(Messages.GAMESTATUS, stability =>
-      this.setStable(stability)
+      this.setStable(stability)                       //tslint:disable-line
     );
 
     this.initControls();
@@ -70,10 +69,6 @@ class View extends Observer {
     if (event.target.classList.contains('js-cell')) {
       const data = event.target.dataset;
       this.broadcast(Messages.TOGGLE, data);
-      console.log('click', data);
-      requestAnimationFrame(() => {
-        this.broadcast(Messages.DIFF);
-      });
     }
   }
 

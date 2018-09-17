@@ -1,5 +1,6 @@
+import ITemplate from './ITemplate';
 
-class Template {
+class Template implements ITemplate {
   constructor(private config) {
   }
 
@@ -45,14 +46,6 @@ class Template {
     }
   }
   
-  renderField(grid= [[1]]) {
-    return `
-      <div class="${this.config.field.selector.slice(1)}">
-        ${this.makeTable(grid)}
-      </div>
-      `;
-  }
-  
   slider(opts) {
     const selTypeAux = this.selType(opts.auxSelector);
     const selAux = opts.auxSelector.slice(1);
@@ -77,6 +70,14 @@ class Template {
     return `
       <div class=${opts.selector.slice(1)}>${opts.textUnstable}</div>
     `;
+  }
+  
+  renderField(grid= [[1]]) {
+    return `
+      <div class="${this.config.field.selector.slice(1)}">
+        ${this.makeTable(grid)}
+      </div>
+      `;
   }
 
   renderControls() {
