@@ -5,4 +5,6 @@ import Model from './Model/Model';
 import View from './View/View';
 import Controller from './Controller/Controller';
 
-new Controller(new Model(), new View('.game'));
+const ctrl = new Controller();
+ctrl.addModel(new Model());
+ctrl.addView(new View('.game'));
