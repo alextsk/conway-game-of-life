@@ -2,9 +2,9 @@
 import State from './State/State';
 import Messages from '../Utilities/Messages';
 import Observer from '../Utilities/Observer';
+import IModel from './IModel';
 
-class Model extends Observer{
-  state: any;
+class Model extends Observer implements IModel{
 
   constructor() {
     super();

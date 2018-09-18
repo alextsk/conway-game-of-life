@@ -3,13 +3,11 @@ import { CellState, Grid } from '../../Utilities/Types';
 import ILogic from './ILogic';
 
 class Logic implements ILogic {
-  private gameUpdate(state: Grid): Grid {
-    return deepClone(state);
-  }
 
-  private getCellState(state: Grid, x:number, y:number): CellState {
-    if (state[y - 1] === undefined || state[y - 1][x - 1] === undefined) return 0;
-    return +state[y - 1][x - 1];
+  private getCellState(grid: Grid, x: number, y: number): CellState {
+    const cellExists = !(grid[y - 1] === undefined || grid[y - 1][x - 1] === undefined);
+    const cellState = cellExists ? grid[y - 1][x - 1] : CellState.Dead;
+    return (cellExists) ? cellState : CellState.Dead;
   }
 
   private getAliveNeighbours(state: Grid, x:number, y:number): number {
@@ -25,19 +23,14 @@ class Logic implements ILogic {
     return newGrid;
   }
 
-  private reviveCell(grid: Grid, x: number, y: number): Grid {
-    return this.changeCellState(1, grid, x, y);
+  public toggleCellState(grid: Grid, x: number, y: number): Grid {
+    const revertedState = this.getCellState(grid, x, y) === CellState.Alive ? 
+      CellState.Dead : 
+      CellState.Alive;
+    return this.changeCellState(revertedState, grid, x, y);
   }
 
-  private killCell(grid: Grid, x: number, y: number): Grid {
-    return this.changeCellState(0, grid, x, y);
-  }
-
-  toggleCell(grid: Grid, x: number, y: number): Grid {
-    return this.getCellState(grid, x, y) ? this.killCell(grid, x, y) : this.reviveCell(grid, x, y);
-  }
-
-  updateState(grid: Grid): Grid {
+  public updateGrid(grid: Grid): Grid {
     return grid
       .map((row, y) => row.map((el, x) => {
         const neigboursCount = this.getAliveNeighbours(grid, x + 1, y + 1);
