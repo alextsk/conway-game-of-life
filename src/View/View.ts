@@ -29,15 +29,15 @@ class View extends Observer implements IView{
     this.fieldContainer = gameContainer.querySelector(this.config.field.selector);
     this.statusMessage = gameContainer.querySelector(this.config.controls.components.message.selector);/*tslint:disable-line */
     
-    this.addObserver(Messages.SPEED, (value) => {
+    this.addObserver(Messages.UPDATE_SPEED, (value) => {
       this.speed = value;
     });
 
-    this.addObserver(Messages.REDRAW, (grid) => {
+    this.addObserver(Messages.STATE_UPDATED, (grid) => {
       this.fieldContainer.innerHTML = this.template.renderField(grid);
     });
 
-    this.addObserver(Messages.GAMESTATUS, stability =>
+    this.addObserver(Messages.STATUS_CHANGED, stability =>
       this.setStable(stability)                       //tslint:disable-line
     );
 
@@ -63,34 +63,32 @@ class View extends Observer implements IView{
     if (this.isRunning()) {
       const messageConfig = this.config.controls.components.message;
       this.statusMessage.innerHTML = messageConfig[this.isStable() ? 'textStable' : 'textUnstable'];
-      this.broadcast(Messages.UPDATE);
+      this.broadcast(Messages.UPDATE_STATE);
     }
   }
 
   private cellClickHandler(event) {
     if (event.target.classList.contains('js-cell')) {
       const data = event.target.dataset;
-      this.broadcast(Messages.TOGGLE, data);
+      this.broadcast(Messages.TOGGLE_CELL, data);
     }
   }
 
   private resetHandler() {
     this.broadcast(Messages.RESET);
-    this.broadcast(Messages.UPDATE);
+    this.broadcast(Messages.UPDATE_STATE);
   }
 
   private speedHandler(event) {
-    this.broadcast(Messages.SPEED, event.target.value);
+    this.broadcast(Messages.UPDATE_SPEED, event.target.value);
   }
 
   private widthHandler(event) {
-    this.broadcast(Messages.WIDTH, event.target.value);
-    this.broadcast(Messages.UPDATE);
+    this.broadcast(Messages.UPDATE_WIDTH, event.target.value);
   }
 
   private heightHandler(event) {
-    this.broadcast(Messages.HEIGHT, event.target.value);
-    this.broadcast(Messages.UPDATE);
+    this.broadcast(Messages.UPDATE_HEIGHT, event.target.value);
   }
 
   private playHandler() {
@@ -125,7 +123,7 @@ class View extends Observer implements IView{
   }
 
   private initField() {
-    this.broadcast(Messages.UPDATE);
+    this.broadcast(Messages.UPDATE_STATE);
     this.fieldContainer.addEventListener('click', this.cellClickHandler.bind(this));
     this.animate(this.draw.bind(this));
   }

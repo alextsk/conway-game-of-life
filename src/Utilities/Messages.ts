@@ -1,14 +1,13 @@
 enum Messages{
-  TOGGLE= 'toggle',
-  UPDATE= 'update',
-  REDRAW= 'redraw',
-  CONTROLS= 'controls',
-  SPEED = 'speedupdated',
-  WIDTH= 'width',
-  HEIGHT= 'height',
+  TOGGLE_CELL= 'toggle',
+  UPDATE_STATE= 'update',
+  STATE_UPDATED= 'redraw',
+  UPDATE_SPEED = 'speedupdated',
+  UPDATE_WIDTH= 'width',
+  UPDATE_HEIGHT= 'height',
   RESET= 'reset',
   RUNSTATUS= 'running',
-  GAMESTATUS= 'gamestatus',
+  STATUS_CHANGED= 'gamestatus',
 }
-
+// each module own messages
 export default Messages;

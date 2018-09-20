@@ -65,7 +65,7 @@ class State implements IState{
     return this.height;
   }
 
-  private getWidth () : number {
+  private getWidth() : number {
     return this.width;
   } 
 
@@ -90,23 +90,23 @@ class State implements IState{
     return this.isRepeatingState();
   }
   
-  public resetGrid() : void {
+  public resetGrid(): void {
     this.isStable = false;
     this.prevGrids = [];
-    this.createGrid(this.width, this.height)
+    this.createGrid(this.width, this.height);
     this.setGrid(this.generateRandomGrid());
   } 
 
-  public setWidth (newWidth: number) : void {
+  public setWidth (newWidth: number): void {
     this.width = +newWidth;
-    const newrow = Array(+newWidth).fill(0);
+    const newrow = Array(+newWidth).fill(null);
     const newGrid = this.grid.map(row => newrow.map((el, i) => row[i] || el));
     this.setGrid(newGrid);
   }
 
   public setHeight(newHeight) {
     this.height = +newHeight;
-    const newGrid = Array(+newHeight).fill('');
+    const newGrid = Array(+newHeight).fill(null);
     const res = newGrid.map((row, i) => 
       this.grid[i] || Array(this.width).fill(CellState.Dead));
     this.setGrid(res);

@@ -8,35 +8,33 @@ class Controller {
   
   resetObservers() {
     this.views.forEach((view) => {
-      view.addObserver(Messages.UPDATE, () => {
-        this.models.forEach(model => model.broadcast(Messages.UPDATE));
-      });
-
-      view.addObserver(Messages.WIDTH, (width) => {
-        this.models.forEach(model => model.broadcast(Messages.WIDTH, width));
-      });
-
-      view.addObserver(Messages.TOGGLE, (coordinates) => {
-        this.models.forEach(model => model.broadcast(Messages.TOGGLE, coordinates));
-      });
-  
-      view.addObserver(Messages.HEIGHT, (height) => {
-        this.models.forEach(model => model.broadcast(Messages.HEIGHT, height));
-      });
-  
-      view.addObserver(Messages.RESET, () => {
-        this.models.forEach(model => model.broadcast(Messages.RESET));
-      });
+      [Messages.UPDATE_STATE, 
+        Messages.UPDATE_WIDTH,
+        Messages.TOGGLE_CELL,
+        Messages.UPDATE_HEIGHT,
+        Messages.RESET,
+      ].forEach(message => 
+        view.addObserver(message, payload => 
+          this.models.forEach(model => model.broadcast(message, payload)),
+        ),
+        );
     });
 
     this.models.forEach((model) => {
-      model.addObserver(Messages.REDRAW, (grid) => {
-        this.views.forEach(view => view.broadcast(Messages.REDRAW, grid));
-      });
+      [Messages.STATE_UPDATED, 
+        Messages.STATUS_CHANGED]
+      .forEach(message =>
+        model.addObserver(message, (payload) => {
+          this.views.forEach(view => view.broadcast(message, payload));
+        })
+      );
+      // model.addObserver(Messages.STATE_UPDATED, (grid) => {
+      //   this.views.forEach(view => view.broadcast(Messages.STATE_UPDATED, grid));
+      // });
   
-      model.addObserver(Messages.GAMESTATUS, (stability) => {
-        this.views.forEach(view => view.broadcast(Messages.GAMESTATUS, stability));
-      });
+      // model.addObserver(Messages.STATUS_CHANGED, (stability) => {
+      //   this.views.forEach(view => view.broadcast(Messages.STATUS_CHANGED, stability));
+      // });
     });
   }
 

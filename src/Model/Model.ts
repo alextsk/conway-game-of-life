@@ -10,31 +10,32 @@ class Model extends Observer implements IModel{
     super();
     const state = new State();
 
-    this.addObserver(Messages.TOGGLE, (data) => {
+    this.addObserver(Messages.TOGGLE_CELL, (data) => {
       state.toggleCell(data.x, data.y);
+      console.log(data);
       state.isStable = false;
-      this.broadcast(Messages.REDRAW, state.getGrid());
+      this.broadcast(Messages.STATE_UPDATED, state.getGrid());
     });
 
-    this.addObserver(Messages.UPDATE, () => {
-      const stability =  state.getNextState();
-      this.broadcast(Messages.GAMESTATUS, stability);
-      this.broadcast(Messages.REDRAW, state.getGrid());
+    this.addObserver(Messages.UPDATE_STATE, () => {
+      const stability = state.getNextState();
+      this.broadcast(Messages.STATUS_CHANGED, stability);
+      this.broadcast(Messages.STATE_UPDATED, state.getGrid());
     });
 
-    this.addObserver(Messages.WIDTH, (value) => {
+    this.addObserver(Messages.UPDATE_WIDTH, (value) => {
       state.setWidth(value);
-      this.broadcast(Messages.REDRAW, state.getGrid());
+      this.broadcast(Messages.STATE_UPDATED, state.getGrid());
     });
 
-    this.addObserver(Messages.HEIGHT, (value) => {
+    this.addObserver(Messages.UPDATE_HEIGHT, (value) => {
       state.setHeight(value);
-      this.broadcast(Messages.REDRAW, state.getGrid());
+      this.broadcast(Messages.STATE_UPDATED, state.getGrid());
     });
 
     this.addObserver(Messages.RESET, () => {
       state.resetGrid();
-      this.broadcast(Messages.REDRAW, state.getGrid());
+      this.broadcast(Messages.STATE_UPDATED, state.getGrid());
     });
   }
 }

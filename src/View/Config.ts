@@ -24,7 +24,7 @@ const config = selector => ({
         minVal: 100,
         maxVal: 2000,
         initVal: 700,
-        message: Messages.SPEED,
+        message: Messages.UPDATE_SPEED,
       },
       width: {
         selector: `${selector}__slider--width`,
@@ -34,7 +34,7 @@ const config = selector => ({
         minVal: 5,
         maxVal: 100,
         initVal: 10,
-        message: Messages.WIDTH,
+        message: Messages.UPDATE_WIDTH,
       },
       height: {
         selector: `${selector}__slider--height`,
@@ -44,7 +44,7 @@ const config = selector => ({
         minVal: 5,
         maxVal: 100,
         initVal: 10,
-        message: Messages.HEIGHT,
+        message: Messages.UPDATE_HEIGHT,
       },
       message: {
         selector: `${selector}__slider--message`,
