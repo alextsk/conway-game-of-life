@@ -1,7 +1,7 @@
 import Logic from './Logic';
-import State from './State';
+import State from '../State/State';
 
-const model = new State(3, 3, 700);
+const model = new State(3, 3);
 const logic = new Logic();
 
 describe('gameUpdate', () => {

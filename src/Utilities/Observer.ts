@@ -1,7 +1,8 @@
 import Messages from './Messages';
+import IObserver from './IObserver';
 type Payload = any;
 
-class Observer{
+class Observer implements IObserver{
   private observers = [];
 
   broadcast(type: Messages, data?: Payload) {

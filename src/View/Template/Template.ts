@@ -1,11 +1,13 @@
+import ITemplate from './ITemplate';
 
-class Template {
-  constructor(private getCell? : (grid: number[][], x: number, y: number) => number) {
+class Template implements ITemplate {
+  constructor(private config) {
   }
 
   makeTableCell(grid, x, y) {
+    const stateOfCell = (grid[y - 1][x - 1]) ? 'alive' : 'dead';
     return (
-    `<td class="js-cell ${this.getCell(grid, x, y) ? 'alive' : 'dead'}" id="x${x}y${y}" data-x=${x} data-y=${y}></td>`// tslint:disable-line
+    `<td class="js-cell cell--${stateOfCell}" id="x${x}y${y}" data-x=${x} data-y=${y}></td>`// tslint:disable-line
     );
   }
   
@@ -28,9 +30,8 @@ class Template {
   }
   
   button(opts) {
-    const selectorType = opts.selector[0] === '.' ? 'class' : 'id';
     return `
-      <button ${selectorType}="${opts.selector.slice(1)}">${opts.title}</button>
+      <button class="${opts.selector.slice(1)}">${opts.title}</button>
     `;
   }
   
@@ -43,14 +44,6 @@ class Template {
       default:
         return 'class';
     }
-  }
-  
-  renderField(grid) {
-    return `
-      <div>
-        ${this.makeTable(grid)}
-      </div>
-      `;
   }
   
   slider(opts) {
@@ -73,16 +66,31 @@ class Template {
     `;
   }
 
-  renderControls({
-    speed, play, reset, width, height,
-  }) {
+  message(opts) {
     return `
-      ${this.button(play)}
-      ${this.button(reset)}
-      ${this.slider(speed)}
-      ${this.slider(width)}
-      ${this.slider(height)}
-      <div class="game__message js-game__message"></div>
+      <div class=${opts.selector.slice(1)}>${opts.textUnstable}</div>
+    `;
+  }
+  
+  renderField(grid= [[1]]) {
+    return `
+      <div class="${this.config.field.selector.slice(1)}">
+        ${this.makeTable(grid)}
+      </div>
+      `;
+  }
+
+  renderControls() {
+    return `
+      <div class="${this.config.controls.selector.slice(1)}">
+        ${this.message(this.config.controls.components.message)}
+        <hr>        
+        ${this.button(this.config.controls.components.play)}
+        ${this.button(this.config.controls.components.reset)}
+        ${this.slider(this.config.controls.components.speed)}
+        ${this.slider(this.config.controls.components.width)}
+        ${this.slider(this.config.controls.components.height)}
+      </div>
     `;
   }
 }
