@@ -29,7 +29,7 @@ table{
   .game__slider--speed{
     direction: rtl;
   }
-  td.cell--alive{
+  .game__cell--alive{
     background: #faa900;
   }
   button{

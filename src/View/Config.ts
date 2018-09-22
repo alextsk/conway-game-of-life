@@ -55,6 +55,7 @@ const config = selector => ({
   },
   field:{
     selector: `${selector}__field`,
+    cellSelector: `${selector}__cell`,
   },
 
 });

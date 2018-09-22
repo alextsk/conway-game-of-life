@@ -5,9 +5,10 @@ class Template implements ITemplate {
   }
 
   makeTableCell(grid, x, y) {
+    const cellClass = this.config.field.cellSelector.slice(1);
     const stateOfCell = (grid[y - 1][x - 1]) ? 'alive' : 'dead';
     return (
-    `<td class="js-cell cell--${stateOfCell}" id="x${x}y${y}" data-x=${x} data-y=${y}></td>`// tslint:disable-line
+    `<td class="js-${cellClass} ${cellClass}--${stateOfCell}" id="x${x}y${y}" data-x=${x} data-y=${y}></td>`// tslint:disable-line
     );
   }
   
