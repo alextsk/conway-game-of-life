@@ -1,4 +1,4 @@
-import Events from './Events';
+import View from './View';
 import Messages from '../Utilities/Messages';
 
 describe('browser events', () => {
@@ -23,7 +23,7 @@ describe('handlers', () => {
   let body;
   let clickEvent;
   let changeEvent;
-  let model = null;
+  let view;
   beforeEach(() => {
 
     clickEvent = new MouseEvent('click', {
@@ -35,106 +35,86 @@ describe('handlers', () => {
       bubbles:true,
       cancelable: true,
     });
-    model = {
-      broadcast: () => {},
-    };
-    
+    body = document.body;
+    body.classList.add('test');
+    view = new View('.test');
   });
-  describe('cellClickHandler', () => {
-    beforeEach(() => {
-      el = document.createElement('div');
-      el.classList.add('js-cell');
-      el.setAttribute('data-x', 1);
-      el.setAttribute('data-y', 2);
-      body = document.body;
-      body.appendChild(el);
-    });
 
-    it('should change the cell state', () => {
-      spyOn(model, 'broadcast');
-      el.addEventListener('click', (new Events()).cellClickHandler(model));
+  describe('click on reset', () => {
+
+    it('should send RESET signal', () => {
+      const dummy = {
+        spied: () => {},
+      };
+      spyOn(dummy, 'spied');
+      view.addObserver(Messages.RESET, dummy.spied);
+      el = document.querySelector('.test__button--reset');
       el.dispatchEvent(clickEvent);
-      expect(model.broadcast).toHaveBeenCalledWith(Messages.TOGGLE, jasmine.any(Object));
+      expect(dummy.spied).toHaveBeenCalled();
     });
-
-    it('should signal model to differentiate', (done) => {
-      spyOn(model, 'broadcast');
-      el.addEventListener('click', (new Events()).cellClickHandler(model));
+  });
+  describe('click on cell', () => {
+    it('should send signal to toggle cell state', () => {
+      const dummy = {
+        spied: () => {},
+      };
+      spyOn(dummy, 'spied');
+      view.addObserver(Messages.TOGGLE_CELL, dummy.spied);
+      view.broadcast(Messages.STATE_UPDATED, [[0, 1], [1, 0]]);
+      el = document.querySelector('.js-test__cell');
       el.dispatchEvent(clickEvent);
-      setTimeout(() => {
-        expect(model.broadcast).toHaveBeenCalledWith(Messages.DIFF);
-        done();
-      },         100); 
+      expect(dummy.spied).toHaveBeenCalled();
     });
   });
-
-  describe('resetHandler', () => {
-    beforeEach(() => {
-      el = document.createElement('buton');
-      body = document.body;
-      body.appendChild(el);
-    });
-    it('should reset model', () => {
-      spyOn(model, 'broadcast');
-      el.addEventListener('click', (new Events()).resetHandler(model));
+  describe('click on play', () => {
+    it('should send RUNNING_CHANGED signal', () => {
+      const dummy = {
+        spied: () => {},
+      };
+      spyOn(dummy, 'spied');
+      view.addObserver(Messages.RUNNING_CHANGED, dummy.spied);
+      el = document.querySelector('.test__button--run');
       el.dispatchEvent(clickEvent);
-      expect(model.broadcast).toHaveBeenCalledWith(Messages.RESET);
+      expect(dummy.spied).toHaveBeenCalled();
     });
   });
 
-  describe('playHandler', () => {
-    beforeEach(() => {
-      el = document.createElement('button');
-      body = document.body;
-      body.appendChild(el);
-    });
-    it('should send a signal to play / pause', () => {
-      spyOn(model, 'broadcast');
-      el.addEventListener('click', (new Events()).playHandler(model));
-      el.dispatchEvent(clickEvent);
-      expect(model.broadcast).toHaveBeenCalledWith(Messages.PLAYPAUSE, jasmine.any(Object));
+  describe('change of speed ', () => {
+    it('should send signal to update speed', () => {
+      const dummy = {
+        spied: () => {},
+      };
+      spyOn(dummy, 'spied');
+      view.addObserver(Messages.UPDATE_SPEED, dummy.spied);
+      el = document.querySelector('.test__slider--speed');
+      el.dispatchEvent(changeEvent);
+      expect(dummy.spied).toHaveBeenCalled();
     });
   });
 
-  describe('widthHandler', () => {
-    beforeEach(() => {
-      el = document.createElement('input');
-      el.value = 11;
-      body = document.body;
-      body.appendChild(el);
-    });
-    it('should set model width', () => {
-      spyOn(model, 'broadcast');
-      el.addEventListener('change', (new Events()).widthHandler(model));
+  describe('change of width slider', () => {
+    it('should send signal to update width', () => {
+      const dummy = {
+        spied: () => {},
+      };
+      spyOn(dummy, 'spied');
+      view.addObserver(Messages.UPDATE_WIDTH, dummy.spied);
+      el = document.querySelector('.test__slider--width');
       el.dispatchEvent(changeEvent);
-      expect(model.broadcast).toHaveBeenCalledWith(Messages.REDRAW);
-    });
-    it('should make model signal of change Width', () => {
-      spyOn(model, 'broadcast');
-      el.addEventListener('change', (new Events()).widthHandler(model));
-      el.dispatchEvent(changeEvent);
-      expect(model.broadcast).toHaveBeenCalledWith(Messages.WIDTH, '11');
+      expect(dummy.spied).toHaveBeenCalled();
     });
   });
 
-  describe('heightHandler', () => {
-    beforeEach(() => {
-      el = document.createElement('input');
-      el.value = 11;
-      body = document.body;
-      body.appendChild(el);
-    });
-    it('should set signal to redraw', () => {
-      spyOn(model, 'broadcast');
-      el.addEventListener('change', (new Events()).heightHandler(model));
+  describe('change of height slider ', () => {
+    it('should send signal to update height', () => {
+      const dummy = {
+        spied: () => {},
+      };
+      spyOn(dummy, 'spied');
+      view.addObserver(Messages.UPDATE_HEIGHT, dummy.spied);
+      el = document.querySelector('.test__slider--height');
       el.dispatchEvent(changeEvent);
-      expect(model.broadcast).toHaveBeenCalledWith(Messages.REDRAW);
-    });
-    it('should make model signal of change Height', () => {
-      spyOn(model, 'broadcast');
-      el.addEventListener('change', (new Events()).heightHandler(model));
-      el.dispatchEvent(changeEvent);
-      expect(model.broadcast).toHaveBeenCalledWith(Messages.HEIGHT, '11');
+      expect(dummy.spied).toHaveBeenCalled();
     });
   });
 });
