@@ -8,18 +8,52 @@ class State implements IState{
   private running : boolean = true;
   private grid : Grid = this.createGrid(this.width, this.height);
   public isStable = false;
-  private logic;
+  private logic: Logic;
 
   constructor(public width:number = 10, public height:number = 10) {
     this.logic = new Logic();
     this.resetGrid();
   }
 
+  public getGrid() : Grid {
+    return this.grid;
+  }
+
+  public toggleCell(x: number, y: number): void {
+    this.updateHistory(this.logic.toggleCellState(this.grid, x, y));
+  }
+
+  public getNextState(): boolean {
+    this.updateHistory(this.logic.updateGrid(this.grid));
+    return this.isRepeatingState();
+  }
+
+  public resetGrid(): void {
+    this.isStable = false;
+    this.prevGrids = [];
+    this.createGrid(this.width, this.height);
+    this.setGrid(this.generateRandomGrid());
+  }
+
+  public setWidth (newWidth: number): void {
+    this.width = newWidth;
+    const newrow = Array(newWidth).fill(null);
+    const newGrid = this.grid.map(row => newrow.map((el, i) => row[i] || el));
+    this.setGrid(newGrid);
+  }
+
+  public setHeight(newHeight: number): void {
+    this.height = newHeight;
+    const newGrid = Array(newHeight).fill(null);
+    const res = newGrid.map((row, i) =>
+      this.grid[i] || Array(this.width).fill(CellState.Dead));
+    this.setGrid(res);
+  }
   private generateRandomGrid(): Grid {
     return this.grid.map(row => row.map(() => this.makeRandomCell()));
   }
   
-  private makeRandomCell() {
+  private makeRandomCell(): CellState {
     return Math.random() > .5 ? CellState.Alive : CellState.Dead;
   }
 
@@ -27,14 +61,13 @@ class State implements IState{
     return (new Array(y)).fill(null).map(() => (new Array(x)).fill(CellState.Dead));// tslint:disable-line
   } 
 
-  private setGrid(newGrid, changeHistory: boolean = false) {
+  private setGrid(newGrid: Grid): void {
     this.grid = deepClone(newGrid);
-    return this.grid;
   }
 
-  private updateHistory(newGrid) {
+  private updateHistory(newGrid: Grid): void {
     this.prevGrids.push(deepClone(this.grid));
-    return this.setGrid(newGrid);
+    this.setGrid(newGrid);
   }
 
   private isRepeatingState(): boolean {
@@ -51,65 +84,14 @@ class State implements IState{
 
   private static diff(old, newGrid) : {x: number, y: number}[] {
     const result = [];
-    for (let i = 0; i < old.length; i += 1) {
-      for (let j = 0; j < old[i].length; j += 1) {
-        if (old[i][j] !== newGrid[i][j]) {
+    old.forEach((row, i) => {
+      row.forEach((cell, j) => {
+        if (cell !== newGrid[i][j]) {
           result.push({ y: i, x: j });
         }
-      }
-    }
+      });
+    });
     return result;
-  }
-
-  private getHeight() {
-    return this.height;
-  }
-
-  private getWidth() : number {
-    return this.width;
-  } 
-
-  private setRunning(val: boolean) {
-    this.running = val;
-  }
-
-  private isRunning() {
-    return !!this.running;
-  }
-
-  public getGrid() : Grid {
-    return this.grid;
-  }
-
-  public toggleCell(x, y) {
-    this.updateHistory(this.logic.toggleCellState(this.grid, x, y));
-  }
-
-  public getNextState() {
-    this.updateHistory(this.logic.updateGrid(this.grid));
-    return this.isRepeatingState();
-  }
-  
-  public resetGrid(): void {
-    this.isStable = false;
-    this.prevGrids = [];
-    this.createGrid(this.width, this.height);
-    this.setGrid(this.generateRandomGrid());
-  } 
-
-  public setWidth (newWidth: number): void {
-    this.width = +newWidth;
-    const newrow = Array(+newWidth).fill(null);
-    const newGrid = this.grid.map(row => newrow.map((el, i) => row[i] || el));
-    this.setGrid(newGrid);
-  }
-
-  public setHeight(newHeight) {
-    this.height = +newHeight;
-    const newGrid = Array(+newHeight).fill(null);
-    const res = newGrid.map((row, i) => 
-      this.grid[i] || Array(this.width).fill(CellState.Dead));
-    this.setGrid(res);
   }
 }
 
