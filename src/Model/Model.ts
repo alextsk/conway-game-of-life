@@ -3,40 +3,55 @@ import State from './State/State';
 import Messages from '../Utilities/Messages';
 import Observer from '../Utilities/Observer';
 import IModel from './IModel';
+import bind from 'bind-decorator';
 
 class Model extends Observer implements IModel{
+  state: State;
 
   constructor() {
     super();
-    const state = new State();
+    this.state = new State();
+    this.initObservers();
+  }
 
-    this.addObserver(Messages.TOGGLE_CELL, (data) => {
-      state.toggleCell(data.x, data.y);
-      console.log(data);
-      state.isStable = false;
-      this.broadcast(Messages.STATE_UPDATED, state.getGrid());
-    });
+  private initObservers() {
+    this.addObserver(Messages.TOGGLE_CELL, this.onToggle);
+    this.addObserver(Messages.UPDATE_STATE, this.onUpdateState);
+    this.addObserver(Messages.UPDATE_WIDTH, this.onUpdateWidth);
+    this.addObserver(Messages.UPDATE_HEIGHT, this.onUpdateHeight);
+    this.addObserver(Messages.RESET, this.onReset);
+  }
 
-    this.addObserver(Messages.UPDATE_STATE, () => {
-      const stability = state.getNextState();
-      this.broadcast(Messages.STATUS_CHANGED, stability);
-      this.broadcast(Messages.STATE_UPDATED, state.getGrid());
-    });
+  @bind
+  private onToggle(cellCoordinates: {x:number, y:number}): void {
+    this.state.toggleCell(cellCoordinates.x, cellCoordinates.y);
+    this.state.isStable = false;
+    this.broadcast(Messages.STATE_UPDATED, this.state.getGrid());
+  }
 
-    this.addObserver(Messages.UPDATE_WIDTH, (value) => {
-      state.setWidth(value);
-      this.broadcast(Messages.STATE_UPDATED, state.getGrid());
-    });
+  @bind
+  private onUpdateState(): void {
+    const stability = this.state.getNextState();
+    this.broadcast(Messages.STATUS_CHANGED, stability);
+    this.broadcast(Messages.STATE_UPDATED, this.state.getGrid());
+  }
 
-    this.addObserver(Messages.UPDATE_HEIGHT, (value) => {
-      state.setHeight(value);
-      this.broadcast(Messages.STATE_UPDATED, state.getGrid());
-    });
+  @bind
+  private onUpdateHeight(height: number): void {
+    this.state.setHeight(height);
+    this.broadcast(Messages.STATE_UPDATED, this.state.getGrid());
+  }
 
-    this.addObserver(Messages.RESET, () => {
-      state.resetGrid();
-      this.broadcast(Messages.STATE_UPDATED, state.getGrid());
-    });
+  @bind
+  private onUpdateWidth(width: number): void {
+    this.state.setWidth(width);
+    this.broadcast(Messages.STATE_UPDATED, this.state.getGrid());
+  }
+
+  @bind
+  private onReset(): void {
+    this.state.resetGrid();
+    this.broadcast(Messages.STATE_UPDATED, this.state.getGrid());
   }
 }
 export default Model;
