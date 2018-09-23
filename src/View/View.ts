@@ -92,7 +92,7 @@ class View extends Observer implements IView{
 
   @bind
   private handleCellClick(event): void {
-    if (event.target.classList.contains(`js-${this.config.field.cellSelector}`)) {
+    if (event.target.classList.contains(`js-${this.config.field.cellSelector.slice(1)}`)) {
       const data = event.target.dataset;
       this.broadcast(Messages.TOGGLE_CELL, data);
     }
@@ -106,17 +106,17 @@ class View extends Observer implements IView{
 
   @bind
   private handleSpeedSliderChange(event): void {
-    this.broadcast(Messages.UPDATE_SPEED, event.target.value);
+    this.broadcast(Messages.UPDATE_SPEED, +event.target.value);
   }
 
   @bind
   private handleWidthSliderChange(event): void {
-    this.broadcast(Messages.UPDATE_WIDTH, event.target.value);
+    this.broadcast(Messages.UPDATE_WIDTH, +event.target.value);
   }
 
   @bind
   private handleHeightSliderChange(event): void {
-    this.broadcast(Messages.UPDATE_HEIGHT, event.target.value);
+    this.broadcast(Messages.UPDATE_HEIGHT, +event.target.value);
   }
 
   @bind
