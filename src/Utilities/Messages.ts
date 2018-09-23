@@ -6,7 +6,7 @@ enum Messages{
   UPDATE_WIDTH= 'width',
   UPDATE_HEIGHT= 'height',
   RESET= 'reset',
-  RUNSTATUS= 'running',
+  RUNNING_CHANGED= 'running',
   STATUS_CHANGED= 'gamestatus',
 }
 // each module own messages
