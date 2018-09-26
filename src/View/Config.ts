@@ -1,8 +1,9 @@
 import Messages from '../Utilities/Messages';
+import { ConfigT, ComponentT } from '../Utilities/Types';
 
-const config = selector => ({
+const config: (selector: string) => ConfigT = selector => ({
   selector,
-  controls:{
+  controls: {
     selector: `${selector}__controls`,
     components: {
       reset: {
@@ -55,6 +56,7 @@ const config = selector => ({
       },
       message: {
         selector: `${selector}__message`,
+        title: 'Stability',
         textStable: 'Game is stable',
         textUnstable: 'Game is playing',
       },
