@@ -1,4 +1,4 @@
-import { Grid, CellState } from '../../Utilities/Types';
+import { Grid } from '../../Utilities/Types';
 
 interface IState {
   getGrid(): Grid;
