@@ -6,6 +6,7 @@ enum Messages{
   UPDATE_WIDTH= 'width',
   UPDATE_HEIGHT= 'height',
   RESET= 'reset',
+  RUNNING_CHANGED= 'running',
   STATUS_CHANGED= 'gamestatus',
 }
 const viewMessages = [

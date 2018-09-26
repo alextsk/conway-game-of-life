@@ -1,23 +1,26 @@
 import Template from './Template';
+import Config from '../Config';
 import { CellState } from '../../Utilities/Types';
 
-describe('render tests', () => {
+describe('template creation tests', () => {
+  const config = Config('.test');
+
   describe('makeTableCell', () => {
     it('should make a table cell', () => {
       const currentState = [[0, 1, 0],
                             [0, 0, 0],
                             [0, 0, 0]];
-      const html1 = (new Template((x, y, z) => CellState.Alive)).makeTableCell(currentState, 2, 1);
-      expect(html1).toBe('<td class="js-cell alive" id="x2y1" data-x=2 data-y=1></td>');    
-                     
+      const html1 = (new Template(config)).makeTableCell(currentState, 2, 1);
+      const test = '<td class="test__cell js-test__cell test__cell--alive" data-x=2 data-y=1></td>';
+      expect(html1.replace(/\s+/g, '').trim()).toBe(test.replace(/\s+/g, '').trim());
     });
   });
 
   describe('makeTableRow', () => {
     it('should make a table row', () => {
       const currentState = [[1]];
-      const html = (new Template((x, y, z) => CellState.Alive)).makeTableRow(currentState, 0);
-      const test = '<tr><td class="js-cell alive" id="x1y1" data-x=1 data-y=1></td></tr>';
+      const html = (new Template(config)).makeTableRow(currentState, 0);
+      const test = '<tr><td class="test__cell js-test__cell test__cell--alive" data-x=1 data-y=1></td></tr>';
       expect(html.replace(/\s+/g, '').trim())
         .toEqual(test.replace(/\s+/g, ''));
     });
@@ -27,52 +30,33 @@ describe('render tests', () => {
     it('should make a table ', () => {
       const currentState = [[0]];
       const test =
-          `<table>
-              <tbody><tr><td class="js-cell dead" id="x1y1" data-x=1 data-y=1></td></tr></tbody>
+          `<table class="test__field">
+              <tbody><tr><td class="test__cell js-test__cell test__cell--dead" data-x=1 data-y=1></td></tr></tbody>
           </table>`;
-      const result = (new Template((x, y, z) => CellState.Dead)).makeTable(currentState);
-      expect(result.replace(/\s+/g, '')).toEqual(test.replace(/\s+/g, ''));         
+      const result = (new Template(config)).makeTable(currentState);
+      expect(result.replace(/\s+/g, '')).toEqual(test.replace(/\s+/g, ''));
     });
   });
 
   describe('button', () => {
-    it('should render a button with id', () => {
-      const result = (new Template((x, y, z) => CellState.Alive))
-        .button({ selector:'#id', title: 'Button1' });
-      const test = '<button id="id"> Button1 </button>';
-      expect(result.replace(/\s+/g, '')).toEqual(test.replace(/\s+/g, ''));
-    });
-    it('should render a button with class', () => {
-      const result = (new Template((x, y, z) => CellState.Alive))
-        .button({ selector:'.class', title: 'Button1' });
-      const test = '<button class="class"> Button1 </button>';
+    it('should render a button', () => {
+      const result = (new Template(config))
+        .button(config.controls.components.play);
+      const test = '<button class="test__button test__button--run js-test__button--run"> Pause </button>';
       expect(result.replace(/\s+/g, '')).toEqual(test.replace(/\s+/g, ''));
     });
   });
 
   describe('slider', () => {
-    it('should render a slider with max and min values', () => {
+    it('should render a slider with given range', () => {
       const result = (new Template((x, y, z) => CellState.Alive))
-        .slider({
-          minVal:10,
-          maxVal:20,
-          selector:'.slider',
-          auxSelector:'.slider-n',
-          title: 'AAAA' });
+        .slider(config.controls.components.speed);
       const testEl = document.createElement('div');
       testEl.innerHTML = result;
-
-      expect(testEl.querySelector('input[type=range]').getAttribute('min')).toBe('10');
-      expect(testEl.querySelector('input[type=range]').getAttribute('max')).toBe('20');
-    });
-    it('should render a slider with correct selectors', () => {
-      const result = (new Template((x, y, z) => CellState.Alive))
-        .slider({ minVal:10, maxVal:20, selector:'.slider', auxSelector:'.slider-n' });
-      const testEl = document.createElement('div');
-      testEl.innerHTML = result;
-
-      expect(testEl.querySelector('input[type=range]').classList.contains('slider')).toBe(true);
-      expect(testEl.querySelector('.subtitle').classList.contains('slider-n')).toBe(true);
+      expect(testEl.querySelector('input[type=range]')
+        .getAttribute('min')).toBe(`${config.controls.components.speed.minVal}`);
+      expect(testEl.querySelector('input[type=range]')
+        .getAttribute('max')).toBe(`${config.controls.components.speed.maxVal}`);
     });
   });
 });
