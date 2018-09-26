@@ -9,5 +9,18 @@ enum Messages{
   RUNNING_CHANGED= 'running',
   STATUS_CHANGED= 'gamestatus',
 }
-// each module own messages
+const viewMessages = [
+  Messages.UPDATE_STATE,
+  Messages.UPDATE_WIDTH,
+  Messages.TOGGLE_CELL,
+  Messages.UPDATE_HEIGHT,
+  Messages.RESET,
+];
+
+const modelMessages = [
+  Messages.STATE_UPDATED,
+  Messages.STATUS_CHANGED,
+];
+
 export default Messages;
+export { viewMessages, modelMessages };
