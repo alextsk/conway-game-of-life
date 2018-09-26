@@ -32,7 +32,7 @@ class View extends Observer implements IView{
     const gameContainer = document.querySelector(this.config.selector);
     gameContainer.innerHTML = (this.template.renderControls()) + (this.template.renderField());
     this.controlsContainer = gameContainer.querySelector(this.config.controls.selector);
-    this.fieldContainer = gameContainer.querySelector(this.config.field.selector);
+    this.fieldContainer = gameContainer.querySelector(this.config.field.wrapperSelector);
     this.statusMessage = gameContainer.querySelector(this.config.controls.components.message.selector);/*tslint:disable-line */
   }
 
@@ -42,11 +42,18 @@ class View extends Observer implements IView{
     });
 
     this.addObserver(Messages.STATE_UPDATED, (grid) => { 
-      this.fieldContainer.innerHTML = this.template.renderField(grid);
+      this.fieldContainer.innerHTML = this.template.makeTable(grid);
+      console.log(this.template.renderField(grid));
     });
 
     this.addObserver(Messages.STATUS_CHANGED, (stability) => {
       this.stable = stability;
+    });
+
+    this.addObserver(Messages.RUNNING_CHANGED, () => {
+      this.running = !this.running;
+      const playConfig = this.config.controls.components.play;
+      this.playButton.innerHTML = playConfig[this.running ? 'title' : 'titlePaused'];
     });
   }
 
@@ -56,10 +63,10 @@ class View extends Observer implements IView{
     this.setSliderEvents(this.controlsContainer, components.width, this.handleWidthSliderChange);
     this.setSliderEvents(this.controlsContainer, components.height, this.handleHeightSliderChange);
 
-    this.playButton = this.controlsContainer.querySelector(components.play.selector);
+    this.playButton = this.controlsContainer.querySelector(`${components.play.selector}--${components.play.modifier}`);
     this.playButton.addEventListener('click', this.handlePlayButtonClick);
 
-    const resetBtn = this.controlsContainer.querySelector(components.reset.selector);
+    const resetBtn = this.controlsContainer.querySelector(`${components.reset.selector}--${components.reset.modifier}`);
     resetBtn.addEventListener('click', this.handleResetButtonClick);
   }
   
@@ -70,9 +77,9 @@ class View extends Observer implements IView{
   }
 
   private setSliderEvents(container, opts, handler): void {
-    const sel = container.querySelector(opts.selector);
+    const sel = container.querySelector(`${opts.selector}--${opts.modifier}`);
     sel.value = opts.initVal;
-    const auxSel = container.querySelector(opts.auxSelector);
+    const auxSel = container.querySelector(`${opts.auxSelector}--${opts.modifier}`);
     this.addObserver(opts.message, (value) => {
       auxSel.innerHTML = opts.reporter(value);
       return auxSel.innerHTML;
@@ -121,9 +128,7 @@ class View extends Observer implements IView{
 
   @bind
   private handlePlayButtonClick(): void {
-    this.running = !this.running;
-    const playConfig = this.config.controls.components.play;
-    this.playButton.innerHTML = playConfig[this.running ? 'title' : 'titlePaused'];
+    this.broadcast(Messages.RUNNING_CHANGED);
   }
 }
 

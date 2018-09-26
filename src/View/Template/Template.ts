@@ -8,7 +8,12 @@ class Template implements ITemplate {
     const cellClass = this.config.field.cellSelector.slice(1);
     const stateOfCell = (grid[y - 1][x - 1]) ? 'alive' : 'dead';
     return (
-    `<td class="js-${cellClass} ${cellClass}--${stateOfCell}" id="x${x}y${y}" data-x=${x} data-y=${y}></td>`// tslint:disable-line
+    `<td class="
+            ${cellClass} 
+            js-${cellClass} 
+            ${cellClass}--${stateOfCell}
+            " 
+         data-x=${x} data-y=${y}></td>`// tslint:disable-line
     );
   }
   
@@ -22,7 +27,7 @@ class Template implements ITemplate {
   
   makeTable(grid) {
     return ` 
-    <table>
+    <table class="${this.config.field.selector.slice(1)}">
       <tbody>
         ${grid.map((row, y) => this.makeTableRow(grid, y)).join('')}
       </tbody>
@@ -32,7 +37,12 @@ class Template implements ITemplate {
   
   button(opts) {
     return `
-      <button class="${opts.selector.slice(1)}">${opts.title}</button>
+      <button class="
+        ${opts.selector.slice(1)} 
+        ${opts.selector.slice(1)}--${opts.modifier}
+        js-${opts.selector.slice(1)}--${opts.modifier}
+        ">
+        ${opts.title}</button>
     `;
   }
   
@@ -48,20 +58,25 @@ class Template implements ITemplate {
   }
   
   slider(opts) {
-    const selTypeAux = this.selType(opts.auxSelector);
     const selAux = opts.auxSelector.slice(1);
     return `
     <div>
-      <label>${opts.title || 'unknown'}: 
+      <label class="${opts.labelSelector.slice(1)}">${opts.title || 'unknown'}: 
         <input 
           type="range" 
           min="${opts.minVal}" 
           max="${opts.maxVal}" 
-          ${this.selType(opts.selector)}="${opts.selector.slice(1)}"
+          class="
+                ${opts.selector.slice(1)} 
+                ${opts.selector.slice(1)}--${opts.modifier}
+                js-${opts.selector.slice(1)}--${opts.modifier}
+                "
         />
       </label>  
-      <div class="subtitle ${selTypeAux === 'class' ? selAux : ''}" 
-           ${this.selType(opts.auxSelector)}="${selAux}">
+      <div class="
+            ${opts.auxSelector.slice(1)} 
+            ${opts.auxSelector.slice(1)}--${opts.modifier}
+            js-${opts.auxSelector.slice(1)}--${opts.modifier}">
       </div>
     </div>
     `;
@@ -69,13 +84,17 @@ class Template implements ITemplate {
 
   message(opts) {
     return `
-      <div class=${opts.selector.slice(1)}>${opts.textUnstable}</div>
+      <div class="
+        ${opts.selector.slice(1)} 
+        js-${opts.selector.slice(1)}">
+        "
+        >${opts.textUnstable}</div>
     `;
   }
   
   renderField(grid= [[1]]) {
     return `
-      <div class="${this.config.field.selector.slice(1)}">
+      <div class="${this.config.field.wrapperSelector.slice(1)}">
         ${this.makeTable(grid)}
       </div>
       `;
