@@ -82,15 +82,13 @@ class State implements IState{
   }
 
   private static diff(old, newGrid) : {x: number, y: number}[] {
-    const result = [];
-    old.forEach((row, i) => {
-      row.forEach((cell, j) => {
-        if (cell !== newGrid[i][j]) {
-          result.push({ y: i, x: j });
-        }
+    return old.flatMap((currRow, i) => {
+      return currRow.map((currCell, j) => {
+        return ({ y: i, x: j });
       });
+    }).filter(({ x, y }) => {
+      return (old[x][y] !== newGrid[x][y]);
     });
-    return result;
   }
 }
 
