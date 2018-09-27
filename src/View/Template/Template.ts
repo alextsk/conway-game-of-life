@@ -1,23 +1,25 @@
 import ITemplate from './ITemplate';
+import { Grid, ConfigT, ComponentT  } from '../../Utilities/Types';
 
 class Template implements ITemplate {
-  constructor(private config) {
+  constructor(private config: ConfigT) {
   }
 
-  makeTableCell(grid, x, y) {
-    const cellClass = this.config.field.cellSelector.slice(1);
+  private makeTableCell(grid: Grid, x: number, y: number) {
+    const { field: { cellSelector } } = this.config;
+    const cellKlass = cellSelector.slice(1);
     const stateOfCell = (grid[y - 1][x - 1]) ? 'alive' : 'dead';
     return (
     `<td class="
-            ${cellClass} 
-            js-${cellClass} 
-            ${cellClass}--${stateOfCell}
+            ${ cellKlass } 
+            js-${ cellKlass } 
+            ${ cellKlass }--${ stateOfCell }
             " 
-         data-x=${x} data-y=${y}></td>`// tslint:disable-line
+         data-x=${x} data-y=${y}></td>`
     );
   }
   
-  makeTableRow(grid, y) {
+  private makeTableRow(grid: Grid, y: number) {
     return (
       `<tr>
         ${grid[y].map((cell, x) => this.makeTableCell(grid, x + 1, y + 1)).join('')}
@@ -25,9 +27,11 @@ class Template implements ITemplate {
     );
   }
   
-  makeTable(grid) {
+  public makeTable(grid: Grid) {
+    const { field: { selector } } = this.config;
+    const klass = selector.slice(1);
     return ` 
-    <table class="${this.config.field.selector.slice(1)}">
+    <table class="${ klass }">
       <tbody>
         ${grid.map((row, y) => this.makeTableRow(grid, y)).join('')}
       </tbody>
@@ -35,81 +39,84 @@ class Template implements ITemplate {
     `;
   }
   
-  button(opts) {
+  public makeButton({ selector, modifier, title }: ComponentT) {
+    const klass = selector.slice(1);
     return `
       <button class="
-        ${opts.selector.slice(1)} 
-        ${opts.selector.slice(1)}--${opts.modifier}
-        js-${opts.selector.slice(1)}--${opts.modifier}
+        ${klass} 
+        ${klass}--${modifier}
+        js-${klass}--${modifier}
         ">
-        ${opts.title}</button>
+        ${title}</button>
     `;
   }
   
-  selType(sel) {
-    switch (sel[0]) {
-      case '.':
-        return 'class';
-      case '#':
-        return 'id';
-      default:
-        return 'class';
-    }
-  }
-  
-  slider(opts) {
-    const selAux = opts.auxSelector.slice(1);
+  public makeSlider(
+    { selector, labelSelector, auxSelector, title, modifier, minVal, maxVal }: ComponentT) {
+    const subKlass = auxSelector.slice(1);
+    const klass = selector.slice(1);
+    const labelKlass = labelSelector.slice(1);
     return `
     <div>
-      <label class="${opts.labelSelector.slice(1)}">${opts.title || 'unknown'}: 
+      <label class="${ labelKlass }">${title || 'unknown'}: 
         <input 
           type="range" 
-          min="${opts.minVal}" 
-          max="${opts.maxVal}" 
+          min="${minVal}" 
+          max="${maxVal}" 
           class="
-                ${opts.selector.slice(1)} 
-                ${opts.selector.slice(1)}--${opts.modifier}
-                js-${opts.selector.slice(1)}--${opts.modifier}
+                ${klass} 
+                ${klass}--${modifier}
+                js-${klass}--${modifier}
                 "
         />
       </label>  
       <div class="
-            ${opts.auxSelector.slice(1)} 
-            ${opts.auxSelector.slice(1)}--${opts.modifier}
-            js-${opts.auxSelector.slice(1)}--${opts.modifier}">
+            ${ subKlass } 
+            ${ subKlass }--${modifier}
+            js-${ subKlass }--${modifier}">
       </div>
     </div>
     `;
   }
 
-  message(opts) {
+  public makeMessage({ selector, textUnstable }: ComponentT) {
+    const klass = selector.slice(1);
     return `
       <div class="
-        ${opts.selector.slice(1)} 
-        js-${opts.selector.slice(1)}">
+        ${klass} 
+        js-${klass}">
         "
-        >${opts.textUnstable}</div>
+        >${textUnstable}</div>
     `;
   }
   
-  renderField(grid= [[1]]) {
+  public renderField(grid= [[1]]) {
+    const { field:{ wrapperSelector } } = this.config;
+    const wrapperKlass = wrapperSelector.slice(1);
     return `
-      <div class="${this.config.field.wrapperSelector.slice(1)}">
+      <div class="${ wrapperKlass }">
         ${this.makeTable(grid)}
       </div>
       `;
   }
 
-  renderControls() {
+  public renderControls() {
+    const {
+      controls: {
+        components: { message, play, reset, speed, width, height },
+        selector,
+      },
+    } = this.config;
+    const klass = selector.slice(1);
     return `
-      <div class="${this.config.controls.selector.slice(1)}">
-        ${this.message(this.config.controls.components.message)}
+      <div class="${ klass }">
+        ${ this.makeMessage(message) }
         <hr>        
-        ${this.button(this.config.controls.components.play)}
-        ${this.button(this.config.controls.components.reset)}
-        ${this.slider(this.config.controls.components.speed)}
-        ${this.slider(this.config.controls.components.width)}
-        ${this.slider(this.config.controls.components.height)}
+        ${ this.makeButton(play) }
+        ${ this.makeButton(reset) }
+        ${ this.makeSlider(speed) }
+        ${ this.makeSlider(width) }
+        ${ this.makeSlider(height) }
       </div>
     `;
   }

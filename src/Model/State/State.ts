@@ -5,7 +5,6 @@ import IState from './IState';
 
 class State implements IState{
   private prevGrids : Grid[] = [];
-  private running : boolean = true;
   private grid : Grid = this.createGrid(this.width, this.height);
   public isStable = false;
   private logic: Logic;

@@ -1,4 +1,4 @@
-import {viewMessages, modelMessages} from '../Utilities/Messages';
+import { viewMessages, modelMessages } from '../Utilities/Messages';
 import Model from '../Model/Model';
 import View from '../View/View';
 
@@ -7,23 +7,23 @@ class Controller{
   private models = [];
 
   private subcribeModelsToView(view: View): void {
-    viewMessages.forEach(message => 
-      view.addObserver(message, (payload) => 
-        this.models.forEach(model => 
-          model.broadcast(message, payload)
-        )
-      )
-    )
+    viewMessages.forEach((message) => {
+      view.addObserver(message, (payload) => {
+        this.models.forEach((model) => {
+          model.broadcast(message, payload);
+        });
+      });
+    });
   }
 
   private subscribeViewsToModel(model: Model): void {
-    modelMessages.forEach(message => 
-      model.addObserver(message, (payload) => 
-        this.views.forEach(view => 
-          view.broadcast(message, payload)
-        )
-      )
-    )
+    modelMessages.forEach((message) => {
+      model.addObserver(message, (payload) => {
+        this.views.forEach((view) => {
+          view.broadcast(message, payload);
+        });
+      });
+    });
   }
 
   public addView(view: View): View {
