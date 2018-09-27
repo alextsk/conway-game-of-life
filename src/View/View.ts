@@ -123,9 +123,9 @@ class View extends Observer implements IView{
 
   @bindDecorator
   private handleCellClick(event: MouseEvent): void {
-    if ((<HTMLInputElement>event.target).classList
+    if ((<HTMLElement>event.target).classList
       .contains(`js-${this.config.field.cellSelector.slice(1)}`)) {
-      const data = (<HTMLInputElement>event.target).dataset;
+      const data = (<HTMLElement>event.target).dataset;
       this.broadcast(Messages.TOGGLE_CELL, data);
     }
   }
