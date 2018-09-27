@@ -1,11 +1,11 @@
-import Messages from '../Utilities/Messages';
+import Messages from '../Messages';
 import Config from './Config';
 import Observer from '../Utilities/Observer';
 import Template from './Template/Template';
 import IView from './IView';
 import bindDecorator from 'bind-decorator';
 import Animate from '../Utilities/Animate';
-import { ComponentT, ConfigT } from '../Utilities/Types';
+import { ComponentT, ConfigT } from '../Types';
 
 class View extends Observer implements IView{
   private stable: boolean;

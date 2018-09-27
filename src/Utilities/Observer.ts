@@ -1,4 +1,4 @@
-import Messages from './Messages';
+import Messages from '../Messages';
 import IObserver from './IObserver';
 type Payload = any;
 

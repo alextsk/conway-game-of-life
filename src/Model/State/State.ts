@@ -1,5 +1,5 @@
 import { deepClone } from '../../Utilities/utils';
-import { CellState, Grid } from '../../Utilities/Types';
+import { CellState, Grid } from '../../Types';
 import Logic from '../Logic/Logic';
 import IState from './IState';
 

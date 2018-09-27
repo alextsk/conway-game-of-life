@@ -1,5 +1,5 @@
 import ITemplate from './ITemplate';
-import { Grid, ConfigT, ComponentT  } from '../../Utilities/Types';
+import { Grid, ConfigT, ComponentT  } from '../../Types';
 
 class Template implements ITemplate {
   constructor(private config: ConfigT) {
