@@ -1,18 +1,12 @@
+
 class Animate {
   constructor(private speed: number) { }
 
-  public run(fn, ...args) {
-    let lastCall = 0;
-    const that = this; // tslint:disable-line
-    return (function animatep(fnP, ...argsP) {
-      requestAnimationFrame((delta) => {
-        if (delta - lastCall > that.speed) {
-          lastCall = delta;
-          fnP(...argsP);
-        }
-        animatep(fnP,  ...argsP);
-      });
-    }(fn, ...args));
+  public run(fn, speed = this.speed, ...args) {
+    setTimeout(() => {
+      fn(...args);
+      this.run(fn, this.speed, ...args);
+    },         this.speed);
   }
 
   public changeSpeed(value: number): void {
