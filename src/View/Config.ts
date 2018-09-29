@@ -1,5 +1,5 @@
-import Messages from '../Utilities/Messages';
-import { ConfigT, ComponentT } from '../Utilities/Types';
+import Messages from '../Messages';
+import { ConfigT, ComponentT } from '../Types';
 
 const config: (selector: string) => ConfigT = selector => ({
   selector,

@@ -1,4 +1,4 @@
-import Messages from './Messages';
+import Messages from '../Messages';
 interface IObserver {
   addObserver(message: Messages, observer: (payload?: any) => void);
   broadcast(message: Messages, payload?: any);

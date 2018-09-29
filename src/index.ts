@@ -1,6 +1,6 @@
 import './styles.css';
 
-import Messages from './Utilities/Messages';
+import Messages from './Messages';
 import Model from './Model/Model';
 import View from './View/View';
 import Controller from './Controller/Controller';

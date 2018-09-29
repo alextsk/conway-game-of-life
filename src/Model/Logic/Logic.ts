@@ -1,5 +1,5 @@
 import { partial, deepClone } from '../../Utilities/utils';
-import { CellState, Grid } from '../../Utilities/Types';
+import { CellState, Grid } from '../../Types';
 import ILogic from './ILogic';
 
 class Logic implements ILogic {

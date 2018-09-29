@@ -1,4 +1,4 @@
-import { Grid } from '../../Utilities/Types';
+import { Grid } from '../../Types';
 
 interface ITemplate {
   makeTable(grid: Grid): string;

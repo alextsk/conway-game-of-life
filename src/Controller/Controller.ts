@@ -1,4 +1,4 @@
-import { viewMessages, modelMessages } from '../Utilities/Messages';
+import { viewMessages, modelMessages } from '../Messages';
 import Model from '../Model/Model';
 import View from '../View/View';
 
