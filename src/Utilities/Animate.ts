@@ -8,7 +8,8 @@ class Animate {
         fn(...args);
         this.run(fn, this.speed, ...args);
       },
-      this.speed);
+      this.speed,
+    );
   }
 
   public changeSpeed(value: number): void {
